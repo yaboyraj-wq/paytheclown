@@ -153,7 +153,6 @@ return {
 			F4 = 8,
 			Showdown = 8,
 		},
-		factor = 0.92,
 		maxMultiplier = 50,
 		neighborProtectionLimit = 6,
 		easyPies = 3,

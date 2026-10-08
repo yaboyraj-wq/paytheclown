@@ -16,9 +16,9 @@ A 5×5 grid of silver cloches (dinner covers) on a long banquet table. Some hide
 
 ## 3. How it plays
 1. Keypad: choose **pie count** within the floor's range and select a safe opening tile. The server creates the board now, excluding that tile and, for counts ≤ 6, its neighbors. Show every pie for a **2-second preview before GO is enabled**. Changing the opening or pie count generates a new preview before commitment. Set stake, GO; the board is then fixed and hidden.
-2. **First reveal is always safe** at the selected opening and opens a small area (if it's a 0, neighbors cascade open like real Minesweeper).
+2. **First reveal is always safe** at the selected opening and reveals exactly that one tile, at 1x. A zero never opens neighbors automatically.
 3. Every revealed safe tile shows a number 0–8 = count of pies in the 8 surrounding cloches. Players can deduce safe tiles.
-4. After each reveal: **PUSH** (reveal another) or **BANK** (cash out at the current multiplier). Cascade reveals count as one action but all revealed tiles count toward the multiplier.
+4. After each reveal: **PUSH** (pick exactly one covered tile) or **BANK** (cash out at the current multiplier). Only successful player picks grow the multiplier. No automatic cascade.
 5. Reveal a pie → splat → lose.
 6. Optional: right-click/long-press to place a **flag** on a suspected pie (no gameplay effect, just notes).
 
@@ -28,12 +28,12 @@ A 5×5 grid of silver cloches (dinner covers) on a long banquet table. Some hide
 ## 5. Payout (multiplier after k safe tiles revealed)
 ```
 safeTiles = 25 − pies
-mult(k) = 0.92 × Π_{i=1}^{k−1} (25 − i) / (safeTiles − i), for k > 1
+mult(k) = Π_{i=1}^{k−1} (25 − i) / (safeTiles − i), for k > 1
 mult(1) = 1.0
 ```
-Rounded to 2 decimals. The first reveal (always safe) is excluded from the product (it starts the board at 1.0x). Cascades multiply in all revealed tiles. Hard ceiling: 50x auto-banks; revealing all safe tiles auto-banks.
+Rounded to 2 decimals. This is reciprocal survival per pick from `reference/ORIGINAL_STUDY.md` §5.10, conditioned on the guaranteed opening: that tile is excluded from both populations and the product starts at 1.0x. No edge factor. Hard ceiling: 50x auto-banks; picking all safe tiles auto-banks.
 
-Example, 3 pies: one extra safe tile pays 1.05x. `k` counts all safe tiles including the guaranteed opening; the product excludes that opening.
+Example, 3 pies: the opening pays 1x, one extra safe pick pays 1.14x, and two extra safe picks pay 1.31x. `k` counts successful picks including the guaranteed opening; the product excludes that opening.
 
 ## 6. Push ladder
 Per reveal as above.
@@ -45,10 +45,10 @@ Per reveal as above.
 | F4 | 4–10 | 8 s |
 | Showdown | fixed 5 pies | 8 s |
 
-Deduction makes this the most skill-rewarding booth; the 0.92 factor keeps guessers below break-even while logical players beat it.
+Deduction and memory of the visible setup reward deliberate picks. The director removed the former 0.92 factor and cascades for the M1 friend playtest.
 
 ## 8. Easy Assist and Showdown
-- Easy Assist: pie count fixed at 3, and the first reveal is always a 0 (cascade).
+- Easy Assist: pie count fixed at 3, and the first reveal is always a 0 (one tile only).
 - Showdown target: **bank at 5x or more with 5 pies**.
 
 ## 9. Items and Foam Bat
@@ -74,4 +74,4 @@ Deduction makes this the most skill-rewarding booth; the 0.92 factor keeps guess
 - Badge "Pie Proof": clear the entire board with 8+ pies.
 
 ## 13. Build notes
-- Board logic is a pure module (`PieSweeperLogic`) with unit tests: pre-stake placement around the selected opening, unchanged map after commitment, number calculation, cascade, multiplier.
+- Board logic is a pure module (`PieSweeperLogic`) with unit tests: pre-stake placement around the selected opening, unchanged map after commitment, number calculation, one tile per pick, duplicate rejection, per-pick multiplier.

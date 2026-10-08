@@ -61,20 +61,8 @@ function PieSweeper.reveal(board: Board, tile: number): boolean
 	if board.pies[tile] or board.revealed[tile] ~= nil then
 		return false
 	end
-	local pending = { tile }
-	while #pending > 0 do
-		local current = table.remove(pending) :: number
-		if board.revealed[current] == nil and not board.pies[current] then
-			local value = PieSweeper.neighborCount(board, current)
-			board.revealed[current] = value
-			board.safeCount += 1
-			if value == 0 then
-				for _, neighbor in PieSweeper.neighbors(current) do
-					table.insert(pending, neighbor)
-				end
-			end
-		end
-	end
+	board.revealed[tile] = PieSweeper.neighborCount(board, tile)
+	board.safeCount += 1
 	return true
 end
 function PieSweeper.multiplier(pies: number, revealed: number): number
@@ -82,7 +70,7 @@ function PieSweeper.multiplier(pies: number, revealed: number): number
 		return 1
 	end
 	local total = C.width * C.height
-	local multiplier = C.factor
+	local multiplier = 1
 	-- Remove the guaranteed first tile from both numerator and denominator.
 	for i = 1, revealed - 1 do
 		multiplier *= (total - i) / (total - pies - i)

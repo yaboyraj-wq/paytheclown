@@ -309,6 +309,15 @@ M1 uses the roadmap's short departure and placeholder cannon. These are prototyp
 
 Pie Sweeper previews its fixed board for 2 seconds before commitment (AGENTS precedence). Other numeric tables remain in their named system specs.
 
+### M1 Pie per-pick revision — 2026-10-07
+
+Director-approved replacement for cascades and the 0.92 factor: each pick opens one
+tile. The guaranteed opening pays 1x. For `k` successful picks including the opening,
+the multiplier is `product(i=1..k-1, (25-i)/(25-pies-i))`, rounded to two decimals.
+This conditions the reference §5.10 reciprocal-survival formula on the free safe
+opening. Three pies: picks 1/2/3 pay 1x/1.14x/1.31x. Eight pies: 1x/1.5x/2.3x.
+The 50x cap and all-safe auto-bank stay; neither can trigger from the opening alone.
+
 ## 14. M1 gray-box measurements and presentation defaults
 
 These prototype-only starting values are mirrored exactly in `Config/Prototype.luau`. Distances are studs, angles radians, durations seconds, and UI measurements design pixels. They do not replace booth payout tables.

@@ -4,6 +4,30 @@
 >
 > `YYYY-MM-DD — [Area] Decision — Why — Files changed — Who decided`
 
+## M1 pre-playtest fixes — 2026-10-07
+
+Director requests three changes, then another stop at the M1 friend gate.
+Plan: (1) regress the cascade opening and replace it with one tile per pick;
+(2) create a fresh server-owned world seed per run and deterministic setup streams;
+(3) add visible world-space reels and reduce their side panel to payouts; verify
+with Lune, lint/types/builds and actual DEV input/screenshots, then commit and push.
+
+- Pie uses the reciprocal-survival formula from `reference/ORIGINAL_STUDY.md` §5.10,
+  conditioned on the guaranteed opening: with `k` successful picks including it,
+  `mult(k) = product(i=1..k-1, (25-i)/(25-pies-i))`, rounded to two decimals and capped
+  at the existing 50x. Opening is 1x; no cascade and no 0.92 factor. Keep the 2-second
+  visible setup and existing opening/neighbor protection. This supersedes earlier
+  cascade and factor rulings. Direction: owner; conditional formula detail: agent.
+- Reels show starting symbols directly on the machine before GO; the side panel
+  contains only payouts. All spinning visuals will share the server's deterministic
+  timeline. No new randomness after GO. Direction: owner.
+- Generate worldSeed once per run on the server, keep it through nights/admin night
+  jumps, and derive separate streams for night strips, play offsets and Pie setups.
+  Do not replicate the master seed; replicate only each permitted setup preview.
+  Block Toss retains its fixed physical starting pose and input-driven physics.
+  Direction: owner; stream separation and seed visibility: agent.
+
+
 ## M0/M1 implementation plan — 2026-10-07
 
 **Goal:** A verified project foundation followed by a playable three-booth gray-box loop; stop at the M1 friend playtest gate.
