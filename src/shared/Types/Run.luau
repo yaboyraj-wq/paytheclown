@@ -1,0 +1,25 @@
+--!strict
+export type State =
+	"LOADING"
+	| "DAY"
+	| "DEPARTING"
+	| "NIGHT_INTRO"
+	| "NIGHT"
+	| "CLOSING"
+	| "RESULT_SUCCESS"
+	| "RESULT_FAIL"
+	| "CANNON"
+	| "RUN_OVER"
+	| "FINAL_CHOICE"
+	| "SHOWDOWN"
+	| "ENDING"
+export type BoothState =
+	"IDLE"
+	| "CLAIMED"
+	| "STAKING"
+	| "LOCKED"
+	| "PLAYING"
+	| "PUSH_DECISION"
+	| "RESOLVING"
+	| "COOLDOWN"
+return {}

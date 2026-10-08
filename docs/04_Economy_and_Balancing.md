@@ -243,3 +243,65 @@ If targets are missed, tune in this order: (1) base quotas, (2) stake caps, (3) 
 2. Every change has a reason code (e.g., `BOOTH_PAYOUT`, `QUOTA`, `BILL_DEPOSIT`, `PAWN`, `ITEM_BUY`, `DEV_PRODUCT`) and is sent to analytics as an economy event (see `19`).
 3. Numbers are integers. No floating-point Tickets. Multipliers are applied then floored.
 4. Max jar: 9,999,999,999 (fits safely in Luau numbers; displayed with abbreviations: 1.2K, 3.4M, 5.6B).
+
+## 13. M0/M1 technical starting values (2026-10-07)
+
+M1 uses the roadmap's short departure and placeholder cannon. These are prototype timings, not final cinematic timings. Arithmetic identities and indexing constants are not tuning values.
+
+| Config/Runtime key | Starting value |
+| --- | --- |
+| `MAX_CREW` | 6 |
+| `LOADING_SECONDS` | 20 |
+| `READY_ALL_SECONDS` | 5 |
+| `READY_SOLO_SECONDS` | 3 |
+| `READY_MAJORITY_SECONDS` | 60 |
+| `DAY_AFK_PROMPT` | 300 |
+| `DAY_AFK_RETURN` | 120 |
+| `DEPART_SECONDS` | 3 |
+| `NIGHT_INTRO_SECONDS` | 4 |
+| `NIGHT_SECONDS` | 300 |
+| `FINAL_CALL_SECONDS` | 60 |
+| `LAST_COUNTDOWN_SECONDS` | 10 |
+| `CLOSING_GRACE_SECONDS` | 5 |
+| `CLOSING_SECONDS` | 12 |
+| `RESULT_SECONDS` | 15 |
+| `RESULT_SKIP_AFTER` | 3 |
+| `CANNON_SECONDS` | 5 |
+| `RUN_OVER_SECONDS` | 30 |
+| `CLAIM_AWAY_SECONDS` | 5 |
+| `KEYPAD_IDLE_SECONDS` | 20 |
+| `LOCK_SECONDS` | 0.6 |
+| `RESULT_PRESENT_SECONDS` | 1.5 |
+| `COOLDOWN_SECONDS` | 1 |
+| `PUSH_SECONDS` | 8 |
+| `CONTROLLER_DISTANCE` | 8 |
+| `STATION_DISTANCE` | 12 |
+| `INPUT_RATE` | 20 |
+| `UI_RATE` | 10 |
+| `INPUT_PAST_TOLERANCE` | 0.25 |
+| `INPUT_FUTURE_TOLERANCE` | 0.05 |
+| `MAX_PING_SECONDS` | 1 |
+| `MAX_PACKET_FIELDS` | 8 |
+| `RETRY_ATTEMPTS` | 4 |
+| `RETRY_INITIAL_SECONDS` | 0.5 |
+| `RETRY_FACTOR` | 2 |
+| `RETRY_MAX_SECONDS` | 4 |
+| `STATE_INTERVAL` | 0.1 |
+| `AUDIT_LIMIT` | 2048 |
+| `MAX_SEQUENCE` | 2147483647 |
+| `MAX_ADMIN_NIGHT` | 100 |
+| `WALK_SPEED` | 16 |
+| `JUMP_POWER` | 50 |
+| `CANNON_UP` | 90 |
+| `CANNON_FORWARD` | 75 |
+| `PROTOTYPE_FLOOR` | 1 |
+| `PIE_DIFFICULTY_FLOOR` | 3 |
+| `SEED` | 1313 |
+| `PIE_PREVIEW_SECONDS` | 2 |
+| `MAX_ROUND_SECONDS` | 45 |
+| `MINUTE` | 60 |
+| `PERCENT` | 100 |
+| `MILLISECOND` | 1000 |
+| `DECIMALS` | 100 |
+
+Pie Sweeper previews its fixed board for 2 seconds before commitment (AGENTS precedence). Other numeric tables remain in their named system specs.

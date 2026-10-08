@@ -1,0 +1,62 @@
+{
+  "name": "PayTheClown_tower",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "Shared": {
+        "$path": "src/shared"
+      },
+      "Packages": {
+        "$path": "Packages"
+      }
+    },
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "Common": {
+        "$path": "src/server/common"
+      },
+      "Bootstrap": {
+        "$path": "src/server/Bootstrap.server.luau"
+      },
+      "ServerPackages": {
+        "$path": "ServerPackages"
+      },
+      "Tower": {
+        "$path": "src/server/tower"
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "Common": {
+          "$path": "src/client/common"
+        },
+        "Bootstrap": {
+          "$path": "src/client/Bootstrap.client.luau"
+        },
+        "Tower": {
+          "$path": "src/client/tower"
+        }
+      }
+    },
+    "ReplicatedFirst": {
+      "$path": "src/first"
+    },
+    "ServerStorage": {
+      "$className": "ServerStorage",
+      "Assets": {
+        "$path": "assets"
+      }
+    },
+    "Workspace": {
+      "$className": "Workspace",
+      "$ignoreUnknownInstances": true
+    },
+    "Lighting": {
+      "$className": "Lighting",
+      "$ignoreUnknownInstances": true
+    }
+  }
+}

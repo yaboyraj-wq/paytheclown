@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+Packages/
+ServerPackages/
+DevPackages/
+build/
+.tools/
+sourcemap.json
+*.rbxl
+*.rbxlx
+*.lock.tmp
+*.log
+art/**/*.blend1

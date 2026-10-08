@@ -1,0 +1,10 @@
+{
+  "languageMode": "strict",
+  "lint": {
+    "LocalUnused": true,
+    "FunctionUnused": true
+  },
+  "aliases": {
+    "Shared": "src/shared"
+  }
+}

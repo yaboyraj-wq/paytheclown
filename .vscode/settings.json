@@ -1,0 +1,10 @@
+{
+  "luau-lsp.sourcemap.rojoProjectFile": "dev.project.json",
+  "luau-lsp.sourcemap.enabled": true,
+  "luau-lsp.platform.type": "roblox",
+  "luau-lsp.ignoreGlobs": [
+    "**/Packages/**",
+    "**/ServerPackages/**",
+    "**/build/**"
+  ]
+}

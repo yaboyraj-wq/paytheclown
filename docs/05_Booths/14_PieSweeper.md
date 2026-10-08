@@ -15,15 +15,15 @@
 A 5×5 grid of silver cloches (dinner covers) on a long banquet table. Some hide cream pies. Lifting a cloche reveals either a clean plate with a **number** (how many neighboring cloches hide pies, like real Minesweeper) or a pie that launches into the Controller's face.
 
 ## 3. How it plays
-1. Keypad: choose **pie count** 3–10. More pies = faster multiplier growth. Set stake, GO.
-2. **First reveal is always safe** and opens a small area (it reveals the tapped tile; if it's a 0, neighbors cascade open like real Minesweeper).
+1. Keypad: choose **pie count** within the floor's range and select a safe opening tile. The server creates the board now, excluding that tile and, for counts ≤ 6, its neighbors. Show every pie for a **2-second preview before GO is enabled**. Changing the opening or pie count generates a new preview before commitment. Set stake, GO; the board is then fixed and hidden.
+2. **First reveal is always safe** at the selected opening and opens a small area (if it's a 0, neighbors cascade open like real Minesweeper).
 3. Every revealed safe tile shows a number 0–8 = count of pies in the 8 surrounding cloches. Players can deduce safe tiles.
 4. After each reveal: **PUSH** (reveal another) or **BANK** (cash out at the current multiplier). Cascade reveals count as one action but all revealed tiles count toward the multiplier.
 5. Reveal a pie → splat → lose.
 6. Optional: right-click/long-press to place a **flag** on a suspected pie (no gameplay effect, just notes).
 
 ## 4. Visible setup randomness
-- Pie positions are random per play, server-only. Information is revealed through Minesweeper numbers (the skill). The first tap is guaranteed safe (pies are placed after the first tap, excluding it and, for counts ≤ 6, its neighbors).
+- Pie positions are generated and shown before commitment, never after it. During play the authoritative map remains server-only and only revealed numbers are sent. The pre-stake preview is public information, so a client can retain it (the same accepted limitation as Gem Recall); no security claim relies on clients forgetting it. This resolves the original hidden-after-stake placement conflict with AGENTS §2.2. See `27`, 2026-10-07.
 
 ## 5. Payout (multiplier after k safe tiles revealed)
 ```
@@ -73,4 +73,4 @@ Deduction makes this the most skill-rewarding booth; the 0.92 factor keeps guess
 - Badge "Pie Proof": clear the entire board with 8+ pies.
 
 ## 13. Build notes
-- Board logic is a pure module (`PieSweeperLogic`) with unit tests: placement after first tap, number calculation, cascade, multiplier.
+- Board logic is a pure module (`PieSweeperLogic`) with unit tests: pre-stake placement around the selected opening, unchanged map after commitment, number calculation, cascade, multiplier.

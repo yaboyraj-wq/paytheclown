@@ -1,0 +1,17 @@
+name: Game checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: CompeyDev/setup-rokit@v0.1.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - run: rokit install --no-trust-check
+      - run: wally install
+      - run: ./tools/check.ps1
+        shell: pwsh
+

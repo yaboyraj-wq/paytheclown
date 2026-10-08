@@ -1,0 +1,142 @@
+--!strict
+return {
+	pads = {
+		5,
+		7,
+		7,
+		7,
+	},
+	minimumNew = 3,
+	repeatSkipNights = 2,
+	newBooths = {
+		{
+			"HOOP_WHEEL",
+			"RING_STACK_21",
+			"STOP_REELS",
+			"DUCK_DERBY",
+			"BLOCK_TOSS",
+			"STRONGMAN_SPINNER",
+		},
+		{
+			"SPLAT_WHEEL",
+			"PENGUIN_CROSSING",
+			"GEM_RECALL",
+			"ROCKET_RIDE",
+			"HILO_METER",
+			"PINBALL_DROP",
+		},
+		{
+			"FUNHOUSE_LADDER",
+			"PIE_SWEEPER",
+			"CARD_CATCH",
+		},
+		{
+			"BOWL_TO_NINE",
+			"BIG_TOP_JUGGLE",
+		},
+	},
+	returns = {
+		HOOP_WHEEL = {
+			0.95,
+			1.1,
+			1.35,
+			1.6,
+		},
+		RING_STACK_21 = {
+			1,
+			1.15,
+			1.4,
+			1.7,
+		},
+		STOP_REELS = {
+			0.95,
+			1.1,
+			1.35,
+			1.6,
+		},
+		DUCK_DERBY = {
+			1,
+			1.15,
+			1.4,
+			1.7,
+		},
+		BLOCK_TOSS = {
+			0.95,
+			1.05,
+			1.3,
+			1.6,
+		},
+		STRONGMAN_SPINNER = {
+			0.9,
+			1.05,
+			1.3,
+			1.5,
+		},
+		SPLAT_WHEEL = {
+			0.9,
+			1.1,
+			1.35,
+			1.6,
+		},
+		PENGUIN_CROSSING = {
+			0.95,
+			1.15,
+			1.4,
+			1.8,
+		},
+		GEM_RECALL = {
+			0.95,
+			1.15,
+			1.4,
+			1.8,
+		},
+		ROCKET_RIDE = {
+			0.95,
+			1.15,
+			1.4,
+			1.8,
+		},
+		HILO_METER = {
+			0.95,
+			1.1,
+			1.35,
+			1.7,
+		},
+		PINBALL_DROP = {
+			0.9,
+			1.05,
+			1.3,
+			1.6,
+		},
+		FUNHOUSE_LADDER = {
+			0.95,
+			1.15,
+			1.4,
+			1.8,
+		},
+		PIE_SWEEPER = {
+			1,
+			1.15,
+			1.45,
+			1.9,
+		},
+		CARD_CATCH = {
+			0.95,
+			1.1,
+			1.35,
+			1.6,
+		},
+		BOWL_TO_NINE = {
+			0.95,
+			1.1,
+			1.35,
+			1.6,
+		},
+		BIG_TOP_JUGGLE = {
+			1,
+			1.15,
+			1.4,
+			1.8,
+		},
+	},
+}
