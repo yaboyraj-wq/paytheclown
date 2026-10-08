@@ -46,6 +46,16 @@ Concurrent stake requests cannot overdraw; stale approval windows cannot spend a
 - Input packets accept only bounded scalar fields (64-character strings, at most 8 fields); each action also checks its exact schema, controller, phase and distance. No client payout/result fields are accepted.
 - Economy mutations are synchronous and deduplicated per run; each accepted mutation records actual before/after balances, including capped credits. Audit display retains 2,048 entries; operation IDs remain remembered for the run.
 
+### M1 runtime and input verification — 2026-10-08
+- Owner admin ID `3068993386` was verified against this DEV experience's user CreatorId and the signed-in test player. The gate requires both exact DEV IDs, then Studio or that owner ID; no other environment is permitted.
+- Server smoke test exercised readiness, crew-scaled quota, duplicate payout rejection, quota payment exactly once, next Day, forced failure, cannon and host replay. It passed in the running server Script context. MCP command execution has a separate module cache, so tracked QA scripts are injected temporarily during Play to test the actual services.
+- A regression test exposed duplicate quota IDs when `/ptc night` revisited a paid night. A per-departure attempt number now distinguishes separate nights while retaining idempotence within one night. The same Studio test changed from failure to PASS. Packet field-name bounds also changed from a failing unit test to green; suite now 17/17.
+- Block Toss repeated the same server-owned throw 20 times at aim 0, power 0.5, spin 0: all 20 returned 12. This verifies one learned throw, not every possible trajectory. Actual GUI aiming/charging/release also ran without script diagnostics.
+- MCP movement and real input tools exercised Reels' preview, GO and three stops; Block Toss; Pie's 8-pie setup, PUSH, safe reveal, BANK (10 staked → 13 returned), and a pie loss. A full natural 5-minute night reached Final Call. Screenshots are in `docs/screenshots/`.
+- **Balance risk for the director:** the specified 3-pie protected opening cascaded to 21 safe tiles and auto-banked 50x. This is the written formula/cascade behavior, not a client-authority bug. Retain the specified values for M1; discuss the opening/cascade economy at the playtest gate before broader booth rollout.
+- **Ruling:** Reels offsets must be shown before GO, not first shown during spinning; this follows AGENTS' commitment rule. Closing grace auto-banks an existing PUSH/BANK decision per the higher-priority booth framework; other unfinished plays lose. Lower-priority wording was corrected.
+- M1 uses English source strings in a Roblox LocalizationTable and original gray-box models. Final animation, audio, loss gags, item/bat hooks, tutorial, full device matrix, persistence and endings stay in their roadmap milestones. No claim of full release readiness under `24` §6 is made.
+
 ## M0 — connection preflight (2026-10-07)
 
 - 2026-10-07 — [Connection checks] Repo root confirmed at `C:\Users\YaBoy\Documents\paytheclown`; `AGENTS.md` and `docs/` exist; `main` was clean and tracking `origin/main` before this log entry — Agent.

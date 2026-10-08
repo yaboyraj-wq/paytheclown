@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Environment = require(ReplicatedStorage.Shared.Config.Environment)
 local Net = require(ReplicatedStorage.Shared.Net.Net)
 local Logger = require(ReplicatedStorage.Shared.Util.Logger)
+local Version = require(ReplicatedStorage.Shared.Config.Version)
 local RuntimeService = {}
 function RuntimeService.init()
 	assert(
@@ -12,6 +13,6 @@ function RuntimeService.init()
 	Net.init()
 end
 function RuntimeService.start()
-	Logger.info("Server", "M0 bootstrap ready in DEV")
+	Logger.info("Server", Version.MILESTONE .. " bootstrap ready in DEV")
 end
 return RuntimeService

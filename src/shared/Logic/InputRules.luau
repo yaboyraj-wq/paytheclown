@@ -23,7 +23,7 @@ function InputRules.packet(value: any): boolean
 	local count = 0
 	for key, item in value do
 		count += 1
-		if count > Runtime.MAX_PACKET_FIELDS or type(key) ~= "string" then
+		if count > Runtime.MAX_PACKET_FIELDS or type(key) ~= "string" or #key > Runtime.MAX_PACKET_STRING then
 			return false
 		end
 		if type(item) ~= "string" and type(item) ~= "boolean" and not InputRules.finite(item) then

@@ -65,7 +65,7 @@ Departure rules:
 - Booths are playable. The jar, the quota bar, and the timer are always on screen.
 - **Final Call** at 1:00 left: music switches to the fast variant, floor lights pulse, Bigsby line, timer turns red.
 - **Last 10 seconds:** a spoken countdown and a ticking sound.
-- **At 0:00:** the Closing Bell rings. No new stakes can start. Any booth play already in progress gets a **5-second grace period** to resolve. After that, any unresolved play is resolved as a loss of its stake (this prevents stalling). Then → `CLOSING`.
+- **At 0:00:** the Closing Bell rings. No new stakes can start. Any booth play already in progress gets a **5-second grace period** to resolve. After that, a play already waiting at PUSH/BANK auto-banks its current value; other unresolved plays lose their stake (framework §2 takes precedence). Then → `CLOSING`.
 
 Special events during `NIGHT`:
 - **Bigsby Walks the Floor:** if the jar drops below 50% of tonight's quota at any time after the first 60 seconds, Bigsby appears and walks between booths for 45 seconds, taunting. While he is out, every booth's minimum stake rises by 25% (pressure, not punishment). He leaves early if the jar climbs back above the quota. Max once per night. Pure drama: cannot cause a loss on its own.

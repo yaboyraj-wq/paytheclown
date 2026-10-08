@@ -306,3 +306,325 @@ M1 uses the roadmap's short departure and placeholder cannon. These are prototyp
 | `DECIMALS` | 100 |
 
 Pie Sweeper previews its fixed board for 2 seconds before commitment (AGENTS precedence). Other numeric tables remain in their named system specs.
+
+## 14. M1 gray-box measurements and presentation defaults
+
+These prototype-only starting values are mirrored exactly in `Config/Prototype.luau`. Distances are studs, angles radians, durations seconds, and UI measurements design pixels. They do not replace booth payout tables.
+
+```json
+{
+  "adminCommands": {
+    "fail": "fail",
+    "jar": "jar",
+    "night": "night",
+    "pass": "pass",
+    "skip": "skip"
+  },
+  "adminMaxTickets": 9999999999,
+  "adminPrefix": "/ptc",
+  "aimDragSensitivity": 0.004,
+  "aimStep": 0.15,
+  "angleMax": 0.6,
+  "angularBase": 7,
+  "angularPower": 9,
+  "angularSpin": 8,
+  "angularZ": 5,
+  "booths": [
+    {
+      "id": "STOP_REELS",
+      "position": [
+        -34,
+        20,
+        -18
+      ]
+    },
+    {
+      "id": "BLOCK_TOSS",
+      "position": [
+        0,
+        20,
+        -18
+      ]
+    },
+    {
+      "id": "PIE_SWEEPER",
+      "position": [
+        34,
+        20,
+        -18
+      ]
+    }
+  ],
+  "cannonPosition": [
+    47,
+    22,
+    28
+  ],
+  "cannonSize": [
+    8,
+    5,
+    12
+  ],
+  "chargePeriod": 2.4,
+  "colorDark": "34363C",
+  "colorFloor": "55575D",
+  "colorPad": "C3C5C8",
+  "colorPart": "A7A9AD",
+  "counterSize": [
+    16,
+    2,
+    8
+  ],
+  "cubeSize": 2,
+  "cubeSpacing": 1.7,
+  "cubeStartY": 4.5,
+  "cubeStartZ": 4,
+  "daySpawn": [
+    0,
+    23,
+    34
+  ],
+  "defaultDifficulty": "Normal",
+  "defaultOpening": 13,
+  "defaultPower": 0.5,
+  "defaultPrivacy": "Friends",
+  "density": 4,
+  "faces": [
+    {
+      "face": "Top",
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "value": 1
+    },
+    {
+      "face": "Bottom",
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "value": 6
+    },
+    {
+      "face": "Right",
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "value": 2
+    },
+    {
+      "face": "Left",
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "value": 5
+    },
+    {
+      "face": "Front",
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "value": 3
+    },
+    {
+      "face": "Back",
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "value": 4
+    }
+  ],
+  "facesText": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6"
+  ],
+  "flatThreshold": 0.98,
+  "floorPosition": [
+    0,
+    18,
+    0
+  ],
+  "floorSize": [
+    120,
+    2,
+    96
+  ],
+  "friction": 0.8,
+  "initialAngles": [
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ]
+  ],
+  "labelDistance": 100,
+  "labelPixels": 50,
+  "labelText": 38,
+  "lotSignPosition": [
+    -45,
+    28,
+    38
+  ],
+  "nightSpawn": [
+    0,
+    23,
+    10
+  ],
+  "packetWindow": 1,
+  "padOffset": [
+    0,
+    -0.6,
+    13
+  ],
+  "padSize": [
+    10,
+    0.4,
+    7
+  ],
+  "pitHalf": 8,
+  "pitMargin": 1.5,
+  "pitSize": [
+    16,
+    1,
+    16
+  ],
+  "postSize": [
+    0.6,
+    10,
+    0.6
+  ],
+  "postX": 8,
+  "postZ": -5,
+  "powerBase": 10,
+  "powerRange": 18,
+  "readyPosition": [
+    0,
+    19.2,
+    28
+  ],
+  "readySize": [
+    18,
+    0.4,
+    8
+  ],
+  "reelCount": 3,
+  "signOffset": [
+    0,
+    9,
+    -5
+  ],
+  "signSize": [
+    17,
+    5,
+    0.5
+  ],
+  "spawnSpread": 4,
+  "ui": {
+    "actionBottom": 24,
+    "aimDeadzone": 0.12,
+    "aimWidth": 0.5,
+    "alpha": 0.08,
+    "barHeight": 12,
+    "baseHeight": 820,
+    "baseWidth": 1180,
+    "blockParamsY": 64,
+    "board": 300,
+    "body": 18,
+    "button": 56,
+    "cameraFocus": [
+      0,
+      2,
+      0
+    ],
+    "cameraOffset": [
+      0,
+      21,
+      28
+    ],
+    "cameraSeconds": 0.4,
+    "compactHeight": 480,
+    "compactLandscapeHeight": 480,
+    "compactWidth": 370,
+    "corner": 8,
+    "crewHeight": 28,
+    "frameZ": 10,
+    "gameBodyHeight": 380,
+    "gameButtonY": 320,
+    "gap": 8,
+    "half": 0.5,
+    "header": 82,
+    "headerBarY": 42,
+    "headerCrewY": 60,
+    "headerJarY": 8,
+    "headerPhaseX": 0.48,
+    "margin": 20,
+    "meterWidth": 0.45,
+    "modalHeight": 260,
+    "modalWidth": 540,
+    "padding": 14,
+    "panelHeight": 520,
+    "panelTop": 122,
+    "panelWidth": 420,
+    "percent": 100,
+    "phaseWidth": 0.52,
+    "pieControlsY": 310,
+    "previewAlpha": 0.15,
+    "quarter": 0.25,
+    "reelHeight": 94,
+    "reelStripY": 132,
+    "resultSeconds": 4,
+    "row": 64,
+    "ruleRow": 48,
+    "scaleMin": 0.8,
+    "sectionContentY": 132,
+    "sectionRuleY": 46,
+    "sectionStatusY": 100,
+    "sectionTitleY": 12,
+    "small": 18,
+    "smallRow": 30,
+    "stakeAdjustY": 132,
+    "stakeChipsY": 68,
+    "stakeGoY": 196,
+    "stakeLimitsY": 34,
+    "stakeValueY": 0,
+    "stripText": 14,
+    "textInset": 12,
+    "textTransparency": 0,
+    "third": 0.3333333333333333,
+    "tile": 56,
+    "timerWidth": 0.18,
+    "title": 24,
+    "titleRow": 34,
+    "toastHeight": 124,
+    "toastTop": 88,
+    "toastWidth": 510,
+    "wideThreshold": 900
+  },
+  "upBase": 8,
+  "upRange": 12,
+  "voidY": -4,
+  "wallHeight": 4,
+  "wallThickness": 1,
+  "weight": 100
+}
+```

@@ -5,7 +5,7 @@ return table.freeze({
 	ENABLE_ENDLESS = false,
 	ENABLE_PURCHASES = false,
 	ENABLE_SAVES = false,
-	ENABLE_PROTOTYPE = false, -- Enabled after the M0 bootstrap playtest.
+	ENABLE_PROTOTYPE = true,
 	SEASON_ID = "GRAND_OPENING",
 	EVENT_THEME = "NONE",
 })

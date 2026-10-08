@@ -1,5 +1,13 @@
 --!strict
 return function(test: (string, () -> ()) -> ())
+	test("packets reject nested data, long field names, oversized strings and excess fields", function()
+		local I = require("../../src/shared/Logic/InputRules")
+		assert(I.packet({ kind = "throw", seq = 1, aim = 0, power = 0.5, spin = 1 }))
+		assert(not I.packet({ nested = {} }) and not I.packet({ value = math.huge }), "scalar finite fields")
+		assert(not I.packet({ [string.rep("x", 65)] = true }), "bounded field name")
+		assert(not I.packet({ kind = string.rep("x", 65) }), "bounded value")
+		assert(not I.packet({ a = 1, b = 2, c = 3, d = 4, e = 5, f = 6, g = 7, h = 8, i = 9 }), "field limit")
+	end)
 	test("quota scales by locked crew and difficulty with nice rounding", function()
 		local Q = require("../../src/shared/Logic/Quota")
 		assert(Q.calculate(1, 1, "Normal") == 260, "solo quota")

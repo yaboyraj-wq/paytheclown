@@ -46,7 +46,7 @@
 - [ ] Particles within `13` §5 limits
 
 ## 5. Exploiter simulation checklist
-For each RemoteEvent: fire with wrong types, nil, huge numbers, negative numbers, NaN, very long strings, another player's IDs, from far away, in the wrong state, 50× faster than allowed. **Expected:** no state change, a log entry, kick only for extreme spam. Also verify hidden information (Pie positions, Ladder Boos beyond the documented weakness, card deck beyond preview, gem positions after flash) never replicates early.
+For each RemoteEvent: fire with wrong types, nil, huge numbers, negative numbers, NaN, very long strings, another player's IDs, from far away, in the wrong state, 50× faster than allowed. **Expected:** no state change, a log entry, kick only for extreme spam. Also verify hidden information never replicates outside documented previews: Pie positions are public before commitment, then only revealed numbers are sent; Ladder Boos, card decks and gem maps follow their own preview rules.
 
 ## 6. Definition of done (per item type)
 | Work | Done means |

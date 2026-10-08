@@ -22,8 +22,8 @@ A tall, chunky carnival machine with three big vertical reels behind glass, a gi
 
 ## 4. Visible setup randomness
 - Each reel has a fixed **strip** of 12 symbols per night (seeded shuffle). The strip is printed on a small card beside the machine, so skilled players can learn it.
-- Reel starting offsets are random per play (visible as soon as they spin).
-- Nothing random after a press.
+- Reel starting offsets are chosen per play before GO. The keypad preview shows every strip and its starting symbol before the stake locks.
+- Nothing random after commitment or after a press (AGENTS §2.2).
 
 ## 5. Payout table
 | Center line | Multiplier |

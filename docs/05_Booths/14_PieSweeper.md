@@ -58,8 +58,8 @@ Deduction makes this the most skill-rewarding booth; the 0.92 factor keeps guess
 - **Foam Bat:** bonking the table rattles the cloches; for 1 s every cloche hiding a pie jiggles **slightly more** than others. One bonk per round. Rewards observation.
 
 ## 10. Edge cases and anti-abuse
-- Pie map is server-only. Revealed numbers are computed on the server.
-- Anomaly flag: >95% safe-reveal rate on non-deducible (50/50) positions over 40+ guesses (see `16`).
+- After the public pre-stake preview, only revealed numbers are sent. Their values are computed on the server.
+- The original safe-guess anomaly flag cannot distinguish memory of the public preview from automation; do not treat remembered preview choices as cheating.
 - Timeout on decision → BANK.
 
 ## 11. Presentation

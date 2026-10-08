@@ -1,2 +1,2 @@
 --!strict
-return table.freeze({ VERSION = "0.0.1", MILESTONE = "M0" })
+return table.freeze({ VERSION = "0.1.0", MILESTONE = "M1" })
