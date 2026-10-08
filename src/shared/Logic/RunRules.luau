@@ -14,8 +14,18 @@ function RunRules.readyDelay(ready: number, total: number): number?
 	end
 	return nil
 end
-function RunRules.tokens(surplus: number, quota: number): number
-	return E.TOKENS.survive
-		+ math.min(E.TOKENS.surplusCap, math.floor(surplus / (quota * E.TOKENS.surplusFraction)))
+function RunRules.tokens(jar: number, quota: number, priorSuccesses: number): number
+	if quota <= 0 or jar < quota then
+		return 0
+	end
+	local floor =
+		math.clamp(math.floor(priorSuccesses / E.TOKENS.successesPerFloor) + 1, 1, #E.TOKENS.floorBase)
+	local extra = 0
+	for _, tier in E.TOKENS.surplus[floor] do
+		if jar / quota >= tier.ratio then
+			extra = tier.reward
+		end
+	end
+	return E.TOKENS.floorBase[floor] + extra
 end
 return RunRules

@@ -10,14 +10,16 @@
 | **Night** | The timed play phase on a tower floor (default 5:00) | `State.NIGHT` |
 | **Final Call** | Last 60 seconds of a night | `finalCall` |
 | **Closing Bell** | End of the night timer | `closingBell` |
-| **Closing Count** | Cutscene where Bigsby takes the quota | `State.CLOSING` |
+| **Closing Count** | Bigsby checks jar ≥ quota; a pass keeps the whole jar | `State.CLOSING` |
 | **Jar** | The crew's shared Tickets for the run | `jar` |
 | **Tickets** | Run currency in the jar; can't be bought | `Tickets` |
 | **Tokens** | Crew currency for Sal's items, rerolls, buy-backs; can't be bought | `Tokens` |
 | **Stars** | Personal permanent currency for cosmetics; can be bought | `Stars` |
-| **Bill** | Total the crew owes Bigsby (1,000,000 on Normal) | `bill` |
-| **Bill Box** | Station to pay down the Bill permanently | `BillBox` |
-| **Quota** | Tickets Bigsby takes at each Closing Count | `quota` |
+| **Bill** | Whole-jar final payment, snapshot at Final Choice; fixed debt retired, M6 redesign pending | `finalPayment` (M6) |
+| **Bill Box** | Retired Day deposit station; future role awaits M6 redesign | `BillBox` (deferred) |
+| **Quota** | Minimum jar balance to survive; never deducted at Closing Count | `quota` |
+| **Pending quota** | Next threshold derived from the retained closing jar, rescaled at departure if crew size changes | `nextQuota` |
+| **Successful nights** | Number of passed Closing Counts; drives quota multipliers and floor Token rewards | `successfulNights` |
 | **Booth** | A skill mini-game on a floor | `Booth` |
 | **Pad** | A booth's spawn spot on a floor | `BoothPad` |
 | **Controller** | The player currently playing a booth | `controller` |

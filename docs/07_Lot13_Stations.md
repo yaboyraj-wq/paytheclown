@@ -148,7 +148,12 @@ These mirror the original's three body parts (eyes → vision, mouth → voice, 
 - Voice Box: use `TextChatService.OnIncomingMessage` on each client to replace that speaker's displayed text with "HONK! HONK!"; mute voice through the audio API (`AudioDeviceInput.Muted` for that player, set by the server — verify the current API in Roblox docs before building).
 - Shoes: set `Humanoid.WalkSpeed = 10`, `JumpPower/JumpHeight = 0`, custom footstep sounds; restore on buy-back.
 
-## 8. The Bill Box (our addition)
+## 8. The Bill Box — retired, M6 redesign pending
+
+**Director revision:** do not build the deposit mechanics below. The fixed Bill
+and Day deposits are superseded by `03` §3.10 and `04` §2: final payment is the
+whole jar at Final Choice. The following is retained only as the previous design;
+the station's future role and presentation will be decided in M6.
 
 ### 8.1 Look
 A big padlocked steel box shaped like Bigsby's head, outside Bigsby's office trailer, with a slot in its mouth and a giant progress thermometer showing **Bill remaining**.

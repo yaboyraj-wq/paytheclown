@@ -27,7 +27,7 @@ S.deadline = 0
 N.step(now())
 S.deadline = 0
 N.step(now())
-assert(S.quota == 400 and S.crewSize == 2, "two-player quota")
+assert(S.quota == 1200 and S.crewSize == 2, "two-player quota")
 move(p1, "STOP_REELS")
 move(p2, "BLOCK_TOSS")
 assert(B.claim(p1, "STOP_REELS") and B.claim(p2, "BLOCK_TOSS"))

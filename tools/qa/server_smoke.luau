@@ -18,7 +18,7 @@ tick()
 assert(S.departureEnd ~= nil)
 S.departureEnd = 0
 tick()
-assert(S.phase == "DEPARTING" and S.quota == 260)
+assert(S.phase == "DEPARTING" and S.quota == 780)
 S.deadline = 0
 tick()
 assert(S.phase == "NIGHT_INTRO")
@@ -42,9 +42,9 @@ tick()
 assert(S.phase == "CLOSING")
 S.deadline = 0
 tick()
-assert(S.phase == "RESULT_SUCCESS" and J.balance() == 760 and S.tokens == 12)
+assert(S.phase == "RESULT_SUCCESS" and J.balance() == 1020 and S.tokens == 16)
 tick()
-assert(J.balance() == 760, "quota must only settle once")
+assert(J.balance() == 1020 and S.tokens == 16, "count retains jar and awards once")
 S.deadline = 0
 tick()
 assert(S.phase == "DAY" and S.night == 2)

@@ -574,7 +574,7 @@ local function render()
 					else "",
 			})
 			elseif run.phase == "RUN_OVER" then text("RESULT.RESTART_HINT")
-			else text("HUD.BILL", { bill = run.bill, tokens = run.tokens })
+			else text("HUD.TOKENS", { reward = run.tokenReward, tokens = run.tokens })
 	)
 	active = nil
 	approval = nil

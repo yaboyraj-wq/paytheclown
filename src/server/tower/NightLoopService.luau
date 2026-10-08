@@ -17,6 +17,14 @@ local worldRandom = Random.new()
 local function now(): number
 	return workspace:GetServerTimeNow()
 end
+local function quotaForCrew(crew: number): number
+	-- Before any success there is no retained-jar history to rescale. Recalculate
+	-- the initial baseline so a changing Day crew cannot compound prior rounding.
+	if Store.successfulNights == 0 then
+		return Quota.initial(crew, E.DEFAULTS.difficulty)
+	end
+	return Quota.rescale(Store.nextQuota, Store.quotaCrewSize, crew)
+end
 local function enter(phase: string, duration: number?)
 	Store.phase = phase
 	Store.entered = now()
@@ -39,12 +47,16 @@ function NightLoopService.reset()
 	Store.nightAttempt = 0
 	Store.night = 1
 	Store.tokens = E.DEFAULTS.tokens
-	Store.bill = E.BILL.Normal
+	Store.tokenReward = 0
+	Store.successfulNights = 0
 	Store.ready = {}
 	Store.skip = {}
 	Store.completed = {}
-	Store.quota = Quota.calculate(1, math.max(1, #Players:GetPlayers()), E.DEFAULTS.difficulty)
-	Store.closingPaid = false
+	Store.quotaCrewSize = math.max(1, #Players:GetPlayers())
+	Store.crewSize = Store.quotaCrewSize
+	Store.quota = Quota.initial(Store.quotaCrewSize, E.DEFAULTS.difficulty)
+	Store.nextQuota = Store.quota
+	Store.closingCounted = false
 	Store.finalCall = false
 	Store.graceEnd = 0
 	Store.departureEnd = nil
@@ -65,10 +77,13 @@ function NightLoopService.depart()
 	end
 	Store.crewSize = math.clamp(#Players:GetPlayers(), 1, R.MAX_CREW)
 	Store.nightAttempt += 1
-	Store.quota = Quota.calculate(Store.night, Store.crewSize, E.DEFAULTS.difficulty)
+	Store.quota = quotaForCrew(Store.crewSize)
+	Store.quotaCrewSize = Store.crewSize
+	Store.nextQuota = Store.quota
 	Store.ready = {}
 	Store.skip = {}
-	Store.closingPaid = false
+	Store.closingCounted = false
+	Store.tokenReward = 0
 	Store.finalCall = false
 	Store.graceEnd = 0
 	Store.forcedResult = nil
@@ -113,7 +128,11 @@ function NightLoopService.adminNight(night: number)
 	Store.ready = {}
 	Store.departureEnd = nil
 	Store.departureDelay = nil
-	Store.quota = Quota.calculate(night, math.max(1, #Players:GetPlayers()), E.DEFAULTS.difficulty)
+	Store.quotaCrewSize = math.max(1, #Players:GetPlayers())
+	Store.successfulNights = night - 1
+	Store.quota = Quota.nominal(night, Store.quotaCrewSize, E.DEFAULTS.difficulty)
+	Store.nextQuota = Store.quota
+	Store.tokenReward = 0
 	enter("DAY")
 	moveCrew(false)
 end
@@ -129,7 +148,7 @@ local function nextDay()
 	Store.skip = {}
 	Store.departureEnd = nil
 	Store.departureDelay = nil
-	Store.quota = Quota.calculate(Store.night, math.max(1, #Players:GetPlayers()), E.DEFAULTS.difficulty)
+	Store.quota = quotaForCrew(math.max(1, #Players:GetPlayers()))
 	enter("DAY")
 	moveCrew(false)
 end
@@ -145,6 +164,7 @@ function NightLoopService.step(time: number)
 			NightLoopService.reset()
 		end
 	elseif Store.phase == "DAY" then
+		Store.quota = quotaForCrew(math.max(1, #Players:GetPlayers()))
 		local ready = 0
 		for _, player in Players:GetPlayers() do
 			if Store.ready[player.UserId] then
@@ -178,8 +198,8 @@ function NightLoopService.step(time: number)
 			Store.finalCall = true
 			Notify.all("TOAST.FINAL")
 		end
-	elseif Store.phase == "CLOSING" and time >= Store.deadline and not Store.closingPaid then
-		Store.closingPaid = true
+	elseif Store.phase == "CLOSING" and time >= Store.deadline and not Store.closingCounted then
+		Store.closingCounted = true
 		if Store.forcedResult == true and Jar.balance() < Store.quota then
 			Jar.change(
 				Store.quota - Jar.balance(),
@@ -190,16 +210,13 @@ function NightLoopService.step(time: number)
 		end
 		local success = if Store.forcedResult ~= nil then Store.forcedResult else Jar.balance() >= Store.quota
 		if success then
-			assert(
-				Jar.change(
-					-Store.quota,
-					"QUOTA",
-					tostring(Store.run) .. ":" .. Store.nightAttempt .. ":quota",
-					0
-				),
-				"Quota must settle once"
-			)
-			Store.tokens = math.min(E.MAX_TOKENS, Store.tokens + Rules.tokens(Jar.balance(), Store.quota))
+			local balance = Jar.balance()
+			local reward = Rules.tokens(balance, Store.quota, Store.successfulNights)
+			Store.tokenReward = math.min(reward, E.MAX_TOKENS - Store.tokens)
+			Store.tokens += Store.tokenReward
+			Store.successfulNights += 1
+			Store.nextQuota =
+				Quota.advance(Store.quota, balance, Store.successfulNights, E.DEFAULTS.difficulty)
 			for _, player in Players:GetPlayers() do
 				Store.completed[player.UserId] = (Store.completed[player.UserId] or 0) + 1
 			end
@@ -258,7 +275,8 @@ function NightLoopService.snapshot(): { [string]: any }
 		crewSize = Store.crewSize,
 		jar = Jar.balance(),
 		tokens = Store.tokens,
-		bill = Store.bill,
+		tokenReward = Store.tokenReward,
+		nextQuota = Store.nextQuota,
 		deadline = Store.deadline,
 		entered = Store.entered,
 		graceEnd = Store.graceEnd,

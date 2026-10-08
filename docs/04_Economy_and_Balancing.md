@@ -6,42 +6,43 @@
 
 | Currency | Scope | Who owns it | Earned from | Spent on | Can Robux buy it? |
 | --- | --- | --- | --- | --- | --- |
-| **Tickets** | One run | The whole crew (the Jar) | Booth payouts, Pawn Popper, Ticket Rain, Snapshot Camera, starting jar | Stakes, nightly quota, Bill Box | **Never** |
+| **Tickets** | One run | The whole crew (the Jar) | Booth payouts, Pawn Popper, Ticket Rain, Snapshot Camera, starting jar | Stakes; whole-jar final payment (M6) | **Never** |
 | **Tokens** | One run (saved with the run) | The whole crew (Token wallet) | Surviving nights, surplus over quota, Dares, Pawn Clamp, Token Magnet, starting Tokens | Sal's items, shop rerolls, dare rerolls, pawn buy-backs | **Never** |
 | **Stars** | Permanent | Each player personally | Playing (see section 8), daily rewards, Carnival Pass, Star packs (Robux) | Cosmetics at Gert's Thrift Tent | **Yes** (cosmetic only) |
 
 Hard rule: **nothing bought with Robux can change a booth result, the jar, the Tokens wallet, or the quota.** The only exception is the once-per-run **Keep the Lights On** revive, which flags the run as Assisted (see `15_Monetization.md`).
 
-## 2. The Bill
+## 2. Final payment and difficulty
 
-| Difficulty | Bill | Quota multiplier | Notes |
-| --- | --- | --- | --- |
-| Easy | 500,000 | ×0.70 | Suggested for solo |
-| Normal | 1,000,000 | ×1.00 | Default, leaderboard eligible |
-| Hard | 2,000,000 | ×1.40 | Hard badges |
+**Director decision — M6 redesign:** retire the fixed 1,000,000-Ticket Bill, all
+difficulty-based Bill amounts and Bill Box Day deposits. At Final Choice, snapshot
+the entire jar as the payment amount; completing PAY transfers it all. M6 must
+redesign the Bill Box, lore, payment presentation, Showdown stakes, score and
+Endless starting balance. These old fixed-debt designs must not be implemented.
+M1 has no final-payment gameplay or fixed-Bill HUD/config value.
 
-- The Bill only goes down through the **Bill Box** (Lot 13; see `07`) or the final payment.
-- The Bill shown in story text must come from config (`BILL[difficulty]`), never a hard-coded "1,000,000" string. If tuning changes the Bill, the story updates automatically.
+| Difficulty | Quota multiplier | Notes |
+| --- | --- | --- |
+| Normal | ×1.00 | Default, leaderboard eligible |
+| Hard | ×1.50 | Study difficulty |
+| Extreme | ×2.00 | Study difficulty |
+
+This replaces the old Easy/Normal/Hard factors. Starting jar and Tokens remain
+1,000 and 5, with their existing save-rule options. Solo retains its crew factor.
 
 ## 3. Nightly quota
 
-### 3.1 Base quota (Normal, 2-player baseline)
+### 3.1 A survival bar, not a payment
 
-| Night | Floor | Base quota |
-| --- | --- | --- |
-| 1 | Midway | 400 |
-| 2 | Midway | 800 |
-| 3 | Midway | 1,500 |
-| 4 | Neon Arcade | 3,000 |
-| 5 | Neon Arcade | 5,500 |
-| 6 | Neon Arcade | 10,000 |
-| 7 | Funhouse | 18,000 |
-| 8 | Funhouse | 30,000 |
-| 9 | Funhouse | 50,000 |
-| 10 | Big Top | 80,000 |
-| 11 | Big Top | 125,000 |
-| 12 | Big Top | 190,000 |
-| 13+ (Endless) | Rotating | `round(190,000 × 1.35^(night − 12))` |
+At Closing Count, compare the settled jar with tonight's quota. `jar >= quota`
+survives and retains the whole jar; otherwise the crew fails. Never debit quota.
+On success, award Tokens once using §7, then advance the successful-night count
+and calculate the pending next quota from that retained jar.
+
+Study starting baseline: 1,200. Catch-up factor: 0.75. Multiplier sequence:
+`[1.2, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.6, 3.0, 3.3, 3.6, 4.0]`.
+Advance before reading: the first successful night uses **1.3** for Night 2.
+The 1.2 entry is not used by that transition.
 
 ### 3.2 Crew size multiplier (crew present at `DEPARTING`)
 
@@ -49,11 +50,53 @@ Hard rule: **nothing bought with Robux can change a booth result, the jar, the T
 | --- | --- | --- | --- | --- | --- | --- |
 | Multiplier | 0.65 | 1.00 | 1.30 | 1.55 | 1.80 | 2.00 |
 
-### 3.3 Final formula
+### 3.3 Progression and rounding
+
+`d` is difficulty; `c` is the crew multiplier locked at departure; `s` is the
+new successful-night count; `B` is the jar after booth settlement, with no quota
+deduction. `Q` is tonight's already crew-scaled quota.
+
 ```
-quota = roundNice( baseQuota[night] × crewMultiplier[crewSize] × difficultyMultiplier )
-roundNice(x): if x < 10,000 → round to nearest 10; else → round to nearest 100
+Q_start = sig2(1200 * d * c)
+Q_pending = sig2((Q + 0.75 * (B - Q)) * multipliers[s + 1] * d)
+Q_next_departure = sig2(Q_pending * c_next / c)
+sig2(x): round to two significant decimal digits, midpoint away from zero
 ```
+
+Crew scaling applies once. With unchanged crew size, the pending quota is used
+directly; do not multiply by `c` again each night. Day previews rescale from the
+same pending baseline; joins/leaves cannot compound rounding. The quota stays
+locked during a night even if players leave or join. Normal starting quotas for
+1–6 players are **780 / 1,200 / 1,600 / 1,900 / 2,200 / 2,400**.
+
+After the sequence, compute the last three deltas. Acceleration is the maximum
+of 0.05, last delta minus previous delta, and previous delta minus the delta
+before it. Each further step adds this acceleration to the prior delta (minimum
+0.05), adds that delta to the prior multiplier, then rounds to one decimal.
+The first extended multipliers are 4.5, 5.1, 5.8. Config uses decimal base 10,
+two significant digits and multiplier precision 10; no fixed 1.35 growth remains.
+
+Nominal **two-player** reference (every closing jar exactly meets its quota):
+
+| Night | Normal | Hard | Extreme |
+| --- | ---: | ---: | ---: |
+| 1 | 1,200 | 1,800 | 2,400 |
+| 2 | 1,600 | 3,500 | 6,200 |
+| 3 | 2,400 | 7,900 | 19,000 |
+| 4 | 4,100 | 20,000 | 65,000 |
+| 5 | 7,800 | 57,000 | 250,000 |
+| 6 | 16,000 | 180,000 | 1,100,000 |
+| 7 | 37,000 | 620,000 | 5,100,000 |
+| 8 | 96,000 | 2,400,000 | 27,000,000 |
+| 9 | 290,000 | 11,000,000 | 160,000,000 |
+| 10 | 960,000 | 54,000,000 | 1,100,000,000 |
+| 11 | 3,500,000 | 290,000,000 | 7,900,000,000 |
+| 12 | 14,000,000 | 1,700,000,000 | 63,000,000,000 |
+
+Actual progression uses the actual jar, not this table. DEV night jumps use the
+nominal history because skipped nights have no real closing balances. M6 must
+reconcile late Extreme/Endless quotas with the existing jar cap before release;
+M1 retains that cap and does not silently clamp the study quota formula.
 
 ## 4. Stakes per floor
 
@@ -94,7 +137,7 @@ Each booth's full rules and payout tables live in `05_Booths/`. This table is th
 | 16 | `BOWL_TO_NINE` | 4 | Aim | Beat Bigsby 2x, Natural 9 2.5x, Tie 1x | 0.95 | 1.10 | 1.35 | 1.6 |
 | 17 | `BIG_TOP_JUGGLE` | 4 | Rhythm co-op + nerve | +0.5x per 5 catches | 1.00 | 1.15 | 1.40 | 1.8 |
 
-**Why returns are above 1.00 for average players:** unlike a casino, the crew has to *grow* the jar to beat rising quotas and the Bill. Good play must make money. The challenge comes from rising quotas, the clock, push greed, and teammates' decisions — not from a house edge.
+**Why returns are above 1.00 for average players:** the crew has to *grow* the jar to beat rising quota bars. Good play must make money. The challenge comes from rising quotas, the clock, push greed, and teammates' decisions — not from a house edge.
 
 **"Expert cap"** is the maximum return we allow even for perfect play. If playtest data or the simulator shows a booth beating its cap, make it harder (faster speeds, smaller targets) — never by adding hidden randomness.
 
@@ -116,11 +159,26 @@ Booths keep their own floor-based difficulty tables (each booth file has one). A
 | Source | Amount |
 | --- | --- |
 | Starting Tokens | 5 (save rule: 0 / 5 / 10) |
-| Night survived | +3 |
-| Surplus bonus | +1 per full 25% of tonight's quota left in the jar after paying it, max +4 |
+| Night survived | Completed floor base: F1 +9, F2 +11, F3 +13, F4 +15 |
+| Surplus bonus | Highest reached retained-jar/quota ratio tier from the table below; tiers do not add together |
 | Dare completed | Easy +3, Medium +5, Hard +8 |
 | Pawn Clamp (per piece, once each per player per run) | Shades +8, Voice Box +6, Shoes +10 |
 | Token Magnet (item) | +1 per crew win while active, max +8 per night |
+
+Use the floor **before** incrementing successes: 0–2 previous successes → F1,
+3–5 → F2, 6–8 → F3, 9+ → F4. Thus clearing Night 3 earns F1 rewards, Night 4 F2.
+M1's physical gray floor remains unchanged; reward progression uses these floors.
+Failed nights earn no base or surplus Tokens. Apply rewards to the shared wallet
+once, capped at 99; show the amount actually added. Starting Tokens stay at 5.
+
+| Closing jar / quota (inclusive) | F1 extra | F2 extra | F3 extra | F4 extra |
+| --- | ---: | ---: | ---: | ---: |
+| 1.1 | 1 | 2 | 3 | 4 |
+| 1.25 | 2 | 4 | 6 | 8 |
+| 1.5 | 3 | 6 | 9 | 12 |
+| 2 | 4 | 8 | 12 | 16 |
+| 3 | 5 | 10 | 15 | 20 |
+| 5 | 5 (unchanged) | 10 (unchanged) | 20 | 25 |
 
 ### 7.2 Sinks
 
@@ -202,7 +260,7 @@ Costs match the original game's ticket costs so its proven item balance carries 
 
 | Rule | Value |
 | --- | --- |
-| Bill Box minimum deposit | 100 Tickets |
+| Bill Box deposit | Retired; whole-jar final payment redesign in M6 |
 | Pawn Popper payout | 33% of tonight's quota per piece (Tickets into the jar) |
 | Ticket Rain | 10 bundles × 1% of tonight's quota |
 | Spotlight Booth | +25% payout for 30 s |
@@ -219,7 +277,7 @@ Create `tools/economy_sim/` (Luau run with Lune, or Python). It must:
 1. Model a crew of 1–6 players with skill tiers (new, average, skilled, expert) using the "target return" per booth from section 5 and a play rate of about 10–14 plays per player per 5-minute night.
 2. Model stake behavior profiles: cautious (stake 10–20% of cap), normal (30–50%), greedy (60–100% and pushes).
 3. Model item usage at a simple level (e.g., Golden Ticket once per night when available).
-4. Run 10,000 runs per configuration and report: clear rate per night, chance to reach Night 12, chance jar ≥ Bill at final, median run length, Tokens earned per night, Stars per hour.
+4. Run 10,000 runs per configuration and report: clear rate per night, chance to reach Night 12, retained jar at final choice, median run length, Tokens earned per night, Stars per hour. Model catch-up quotas and retained balances, never nightly deductions.
 
 ### 11.1 Balance targets (Normal, 4-player crew, average skill, normal stakes)
 
@@ -231,16 +289,16 @@ Create `tools/economy_sim/` (Luau run with Lune, or Python). It must:
 | Night 9 clear rate | ≈ 60% |
 | Night 12 clear rate | ≈ 45% |
 | Reach an ending | ≈ 40% of runs |
-| Jar ≥ Bill at final (given Night 12 cleared) | ≈ 55–65% |
+| Jar at final choice (given Night 12 cleared) | Distribution to measure; no fixed-debt affordability gate |
 | Median run length | 40–55 minutes |
 | Skilled crews reaching an ending | ≈ 70% |
 
-If targets are missed, tune in this order: (1) base quotas, (2) stake caps, (3) the Bill, (4) booth difficulty rows. Never fix balance with hidden randomness.
+These clear-rate targets predate the director's quota revision and need simulator validation. If targets are missed, propose tuning to (1) starting quota/catch-up/multiplier sequence, (2) stake caps, (3) booth difficulty rows. Keep the approved values until the director agrees to tuning; never fix balance with hidden randomness.
 
 ## 12. Economy safety rules
 
 1. All currency changes happen on the server through one `Economy` service with an audit log (see `16`, `17`).
-2. Every change has a reason code (e.g., `BOOTH_PAYOUT`, `QUOTA`, `BILL_DEPOSIT`, `PAWN`, `ITEM_BUY`, `DEV_PRODUCT`) and is sent to analytics as an economy event (see `19`).
+2. Every currency change has a reason code (e.g., `BOOTH_PAYOUT`, `PAWN`, `ITEM_BUY`) and is sent to analytics as an economy event (see `19`). Closing Count is a state transition, not a jar transaction: no `QUOTA` debit or `BILL_DEPOSIT` exists. Final-payment audit behavior is M6 work.
 3. Numbers are integers. No floating-point Tickets. Multipliers are applied then floored.
 4. Max jar: 9,999,999,999 (fits safely in Luau numbers; displayed with abbreviations: 1.2K, 3.4M, 5.6B).
 

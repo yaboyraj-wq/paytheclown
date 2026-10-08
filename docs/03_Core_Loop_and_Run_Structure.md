@@ -8,8 +8,8 @@
 - **Day** — the planning phase in Lot 13 before each night. Untimed (with an AFK safeguard).
 - **Night** — the 5-minute play phase on a tower floor.
 - **Jar** — the crew's shared Tickets for this run.
-- **Bill** — what the crew owes Bigsby (1,000,000 on Normal).
-- **Quota** — Tickets Bigsby takes at the end of each night.
+- **Bill** — final payment of the entire jar at Final Choice; presentation awaits M6 redesign. The fixed 1,000,000 Bill is retired.
+- **Quota** — the minimum jar balance needed to survive Closing Count; no Tickets are taken.
 - **Crew** — the 1–6 players in this run's private server.
 
 ## 2. The loop at three zoom levels
@@ -43,7 +43,7 @@ Every state change is server-authoritative, replicated to all clients through on
 What happens:
 1. Each player pops out of the **prize crate** (2 s animation, press/tap to skip).
 2. A **Day Card** slides in: "Day 4 — Tonight: Neon Arcade — Quota: 3,000" (3 s, then shrinks to the HUD).
-3. Players can use every station in Lot 13 (`07_Lot13_Stations.md`): Dare Board, Sal's Trailer, Thrift Tent, Pawn Clamp, Bill Box, Bouncy Lot, Crew Trailer.
+3. Players can use the active stations in Lot 13 (`07_Lot13_Stations.md`): Dare Board, Sal's Trailer, Thrift Tent, Pawn Clamp, Bouncy Lot, Crew Trailer. Bill Box deposits are retired; its role awaits M6 redesign.
 4. To start the night, players get in the **Clown Car** (walk into the seats or press **READY** on the HUD).
 
 Departure rules:
@@ -72,14 +72,14 @@ Special events during `NIGHT`:
 - **Floor Event (Nights 4+, once per night, random time between 1:30 and 3:30 elapsed):** one of: "Spotlight Booth" (one random booth pays +25% for 30 s, shown with a spotlight), "Ticket Rain" (for 20 s, 10 glowing ticket bundles drop at random open spots on the floor; touching one adds 1% of tonight's quota to the jar — a scramble that rewards moving fast, max 10% of quota total), "Rush Hour" (all booth rounds are 20% faster for 30 s, payouts +10%). Events must be visible to everyone and announced 3 s ahead. Tune or remove in playtests.
 
 ### 3.6 `CLOSING` (about 12 s)
-1. Camera cuts to Bigsby at a giant counting machine. Tickets fly from the jar into it.
-2. The counter rolls up to tonight's quota.
-3. **If jar ≥ quota:** quota is removed from the jar. Bigsby grumbles. → `RESULT_SUCCESS`.
+1. Camera cuts to Bigsby at a giant counting machine. He counts the jar without taking any Tickets.
+2. The counter compares the settled jar balance with tonight's quota bar.
+3. **If jar ≥ quota:** the crew survives and keeps the whole jar. Award the completed floor's base Tokens plus its highest reached surplus-ratio reward, once. Advance the successful-night count and compute the next quota from this retained jar (`04` §§3, 7). Bigsby grumbles. → `RESULT_SUCCESS`.
 4. **If jar < quota:** the counter stalls, sirens, Bigsby gasps then grins. → `RESULT_FAIL`.
 
 ### 3.7 `RESULT_SUCCESS` (about 15 s, skippable after 3 s by majority vote)
 Night summary card (see `10_UI_UX_Spec.md`):
-- Quota paid, jar left, Tickets won and lost tonight, best single win (with player name), biggest single loss (with player name), Dare result.
+- Quota met, jar kept, Tickets won and lost tonight, best single win (with player name), biggest single loss (with player name), Dare result.
 - Awards: **MVP** (most net Tickets won), **Biggest Loser** (most net Tickets lost — funny, with a trombone), **Daredevil** (biggest single push).
 - Tokens earned (crew) and Stars earned (personal). See `04`.
 - Autosave. → next `DAY` (Night counter +1). After Night 12 → `FINAL_CHOICE`.
@@ -95,9 +95,9 @@ Night summary card (see `10_UI_UX_Spec.md`):
 - Buttons: **Play Again** (same crew, new run, same rules — creates a new run in the same server), **Back to Gates** (teleport everyone to the hub together). Default after 30 s of no input: Back to Gates.
 
 ### 3.10 `FINAL_CHOICE` (after Night 12 succeeds)
-- All players are moved to the **Center Ring**. Bigsby holds up the remaining Bill.
-- **If jar ≥ remaining Bill:** two giant buttons: **PAY THE CLOWN** and **SHOWDOWN!** Crew votes for 20 s (each player taps one). Majority wins; tie → PAY. Solo: player chooses.
-- **If jar < remaining Bill:** Bigsby forces the **Showdown** ("Can't pay? Then PLAY!").
+- **M6 redesign required:** the fixed lifetime Bill and Bill Box deposits no longer apply. Snapshot the whole jar at Final Choice as the final payment amount. Completing PAY transfers that whole amount and leaves the live jar at zero.
+- PAY is available after surviving Night 12; there is no separate remaining-debt affordability test and no forced Showdown caused by one.
+- The Center Ring presentation, crew vote, payment interaction and optional Showdown are to be redesigned in M6. No final-choice gameplay ships in M1. This ruling supersedes older Bill-based lore, UI, save fields and ending conditions elsewhere in the spec.
 
 ### 3.11 `SHOWDOWN` (about 2 minutes)
 - 3 rounds. Each round is one booth from the set the crew played most this run (at least 3 different booths; fill from Floor 4 pool if needed), at **Showdown difficulty** (see each booth file).
@@ -105,11 +105,11 @@ Night summary card (see `10_UI_UX_Spec.md`):
 - A round is won if the Performer reaches the booth's Showdown target (defined per booth).
 - **Win 2 of 3 rounds** → `RINGMASTERS` ending. Otherwise → `PART_OF_THE_ACT` ending.
 - Items cannot be used in the Showdown. The Foam Bat is not available. Pure skill.
-- Stakes: if the crew chose Showdown with jar ≥ Bill, a win erases the Bill **and doubles the jar** for the score; a loss sets the jar to 0. If forced, a win erases the Bill (jar unchanged), a loss sets the jar to 0.
+- **M6 redesign:** Showdown stakes and scoring must account for the whole-jar final payment. The old optional-versus-forced Bill branches are retired; do not implement them.
 
 ### 3.12 `ENDING`
 - Ending cutscene (see `02`), ending badge, Stars bonus (see `04`), crew photo moment (a posed group shot players can screenshot).
-- **Score** = jar after the ending. Submitted to leaderboards if the run is not Assisted and used default rules (section 9).
+- **M6 redesign:** define ending score and Endless starting balance separately from the live jar, which PAY empties. Leaderboard eligibility still requires an unassisted default-rule run (section 9).
 - Options: **Endless Nights** (continue this run from Night 13 with quotas continuing to grow; see section 10), **Play Again**, **Back to Gates**.
 
 ## 4. Floors and night schedule
@@ -172,9 +172,10 @@ Each new floor plays a 6-second "Act" intro the first time a crew reaches it in 
 ## 8. Quota rules
 
 - Tonight's quota is set at `DEPARTING` and never changes during the night.
-- Base quota per night comes from the table in `04`, multiplied by the **crew size multiplier** for the number of crew members in the server at `DEPARTING` and the difficulty multiplier.
+- Starting quota is 1,200 times difficulty and crew multiplier, rounded to two significant digits. Each success moves the quota 75% toward the retained closing jar, then applies the next study multiplier and difficulty before rounding (`04` §3).
+- Keep the pending next quota anchored to the prior departure's crew size. At the next departure rescale it once by the new/prior crew multiplier ratio; Day shows this provisional value. A constant-size crew gets no extra compounding crew factor.
 - Players who join mid-night do not change tonight's quota.
-- Quota is paid only at `CLOSING`. There is no early payment of the quota. (Crews can pay down the *Bill* any time in Lot 13 — see Bill Box in `07`.)
+- Quota is checked only at `CLOSING`. Passing keeps every Ticket and awards Tokens once; failure awards none. Neither quota payments nor Day Bill deposits exist.
 
 ## 9. Save rules (per-run settings, locked at creation)
 
@@ -183,7 +184,7 @@ Mirrors the original game's per-save rules. Chosen in the **New Crew** menu, loc
 | Rule | Options | Default |
 | --- | --- | --- |
 | Night length | 3:00 / 5:00 / 7:00 / 10:00 | 5:00 |
-| Difficulty | Easy / Normal / Hard | Normal |
+| Difficulty | Normal / Hard / Extreme (×1 / ×1.5 / ×2) | Normal |
 | Starting jar | 500 / 1,000 / 2,500 | 1,000 |
 | Starting Tokens | 0 / 5 / 10 | 5 |
 | Big-Stake Approval | On / Off | On for Public, Off for Friends/Invite |
@@ -191,7 +192,7 @@ Mirrors the original game's per-save rules. Chosen in the **New Crew** menu, loc
 
 **Leaderboard eligibility:** only runs with all defaults (5:00, Normal, 1,000 jar, 5 Tokens) and not Assisted. Endless Nights has its own leaderboard (nights survived).
 
-Solo hint: when a player creates a crew alone, the menu suggests Easy with one line: "Playing solo? Easy is a great start."
+Solo uses the 0.65 crew factor. The retired Easy quota difficulty is not offered.
 
 ## 10. Endless Nights
 

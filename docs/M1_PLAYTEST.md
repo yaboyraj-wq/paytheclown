@@ -33,7 +33,7 @@ need the DEV invitation steps below.
    have 2–4 client windows. Allow each window to finish loading. If Studio starts
    clients automatically, count those first.
 6. In every client, check that the HUD lists the crew and the same jar. Click
-   **READY** in every client. With two players, Night 1's quota is **400**;
+   **READY** in every client. With two players, Night 1's quota is **1,200**;
    with four, it is **620**.
 7. Switch between client windows to play different booths. Spend from one and
    check that the other windows update. Let one night finish, then ready up again.
@@ -81,9 +81,13 @@ playtester flow used above. Requirements were checked on 2026-10-07.
    the toast warns everyone, but does not give them a binding veto. Approval-on
    behavior was separately verified in the server tests.
 5. Play through the full five-minute timer, Final Call, and Closing Count. Watch
-   whether paying Bigsby or getting launched creates a reaction.
+   whether clearing Bigsby's quota bar or getting launched creates a reaction.
 6. Play another night or use the host's **PLAY AGAIN** after a loss. Run three
    sessions in total; use ordinary controls rather than admin shortcuts.
+
+At Closing Count, check that a successful crew keeps the entire jar and gains
+Tokens. The next quota responds to that retained balance. Solo starts at 780;
+four players start at 1,900. The fixed Bill and Bill Box are awaiting M6 redesign.
 
 Pie now reveals exactly one tile per pick: the opening pays 1x and additional
 safe picks grow the payout. Watch whether PUSH/BANK creates tension. Note whether

@@ -1,29 +1,20 @@
 --!strict
 -- Starting values from docs/04 and the corresponding system specification.
 return {
-	BILL = {
-		Easy = 500000,
-		Normal = 1000000,
-		Hard = 2000000,
-	},
+	-- Whole-jar final payment and Bill Box presentation are deferred to M6.
 	DIFFICULTY = {
-		Easy = 0.7,
 		Normal = 1,
-		Hard = 1.4,
+		Hard = 1.5,
+		Extreme = 2,
 	},
-	BASE_QUOTA = {
-		400,
-		800,
-		1500,
-		3000,
-		5500,
-		10000,
-		18000,
-		30000,
-		50000,
-		80000,
-		125000,
-		190000,
+	QUOTA = {
+		initial = 1200,
+		catchUp = 0.75,
+		multipliers = { 1.2, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.6, 3, 3.3, 3.6, 4 },
+		significantDigits = 2,
+		decimalBase = 10,
+		minimumAcceleration = 0.05,
+		multiplierPrecision = 10,
 	},
 	CREW_MULTIPLIER = {
 		0.65,
@@ -33,10 +24,6 @@ return {
 		1.8,
 		2,
 	},
-	ENDLESS_GROWTH = 1.35,
-	ROUND_THRESHOLD = 10000,
-	ROUND_SMALL = 10,
-	ROUND_LARGE = 100,
 	MAX_JAR = 9999999999,
 	MAX_TOKENS = 99,
 	STAKES = {
@@ -98,9 +85,40 @@ return {
 		},
 	},
 	TOKENS = {
-		survive = 3,
-		surplusFraction = 0.25,
-		surplusCap = 4,
+		successesPerFloor = 3,
+		floorBase = { 9, 11, 13, 15 },
+		surplus = {
+			{
+				{ ratio = 1.1, reward = 1 },
+				{ ratio = 1.25, reward = 2 },
+				{ ratio = 1.5, reward = 3 },
+				{ ratio = 2, reward = 4 },
+				{ ratio = 3, reward = 5 },
+			},
+			{
+				{ ratio = 1.1, reward = 2 },
+				{ ratio = 1.25, reward = 4 },
+				{ ratio = 1.5, reward = 6 },
+				{ ratio = 2, reward = 8 },
+				{ ratio = 3, reward = 10 },
+			},
+			{
+				{ ratio = 1.1, reward = 3 },
+				{ ratio = 1.25, reward = 6 },
+				{ ratio = 1.5, reward = 9 },
+				{ ratio = 2, reward = 12 },
+				{ ratio = 3, reward = 15 },
+				{ ratio = 5, reward = 20 },
+			},
+			{
+				{ ratio = 1.1, reward = 4 },
+				{ ratio = 1.25, reward = 8 },
+				{ ratio = 1.5, reward = 12 },
+				{ ratio = 2, reward = 16 },
+				{ ratio = 3, reward = 20 },
+				{ ratio = 5, reward = 25 },
+			},
+		},
 		dare = {
 			Easy = 3,
 			Medium = 5,
@@ -154,7 +172,6 @@ return {
 		dareRerollStep = 1,
 		seedDayFactor = 101,
 	},
-	BILL_DEPOSIT_MIN = 100,
 	EVENTS = {
 		ticketBundles = 10,
 		ticketQuotaFraction = 0.01,

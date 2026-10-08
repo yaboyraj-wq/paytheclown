@@ -43,7 +43,7 @@
 
 ## M3 — Lot 13 stations, items, Foam Bat, tutorial
 **Read:** `06`, `07`, `03` §11
-- Prize crate spawn, Day Card, Dare Board (pool, acceptance, rerolls, tracking), Sal's Trailer (stock, buy, reroll, stash, pickup), Pawn Clamp (penalties, buy-back), Bill Box, Bouncy Lot (simple), Crew Trailer (rules, crew list, leave, invite, kick vote), Clown Car ready logic + departure cutscene placeholder.
+- Prize crate spawn, Day Card, Dare Board (pool, acceptance, rerolls, tracking), Sal's Trailer (stock, buy, reroll, stash, pickup), Pawn Clamp (penalties, buy-back), Bouncy Lot (simple), Crew Trailer (rules, crew list, leave, invite, kick vote), Clown Car ready logic + departure cutscene placeholder. Bill Box is deferred to M6 redesign; do not build the old fixed-debt deposits.
 - ItemService with all **Floor 1 items** first (Do-Over, Double Dare, Fix-It, Surprise Crate, Golden Ticket, Zap Wand, Fizz Pop, Bubble Wrap), then the rest as their floors arrive. Foam Bat with Block Toss + Strongman hooks.
 - Tutorial flow for new players.
 **Acceptance:** a full Day → Night loop with shopping, dares and pawning works with 1–6 players; all item rules from `06` §1 enforced.
@@ -71,6 +71,7 @@
 - Floor 2 booths + F2 items; Floor 3 booths + F3 items; Floor 4 booths; each floor at gray-box first, then the M5 quality bar.
 - Floor events (Spotlight, Ticket Rain, Rush Hour), Bigsby Walks the Floor.
 - Final Choice, Showdown, 3 endings with cutscenes, Endless Nights.
+- Redesign the retired fixed 1,000,000 Bill and Bill Box: final payment is the whole jar snapshot at Final Choice. Update lore, voting/payment interaction, Showdown stakes, ending score, saves and Endless starting balance together. Reconcile late-game quota growth with the jar cap; no legacy Day deposits.
 **Acceptance:** a full 12-night run is completable; all endings reachable (add a DEV-only admin command to jump to any night for testing); simulator re-run with all booths.
 **Gate:** two full runs by a friend crew; their notes on pacing and difficulty are addressed.
 

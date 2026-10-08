@@ -4,6 +4,54 @@
 >
 > `YYYY-MM-DD — [Area] Decision — Why — Files changed — Who decided`
 
+## M1 quota-bar revision — 2026-10-07
+
+Director decision: quota is a survival threshold, never a nightly payment. Use
+the plain-language study §§3.2, 3.4 and 14.1 for progression and Token rewards.
+Plan: write quota/reward and retained-jar regressions; replace fixed night quotas
+with server-owned progression; update localized UI and the affected design files;
+verify pure rules and actual DEV closing/replay, commit, push, stop at M1 again.
+
+- Start at `sig2(1200 * difficulty * crewMultiplier)`. Difficulty follows the study:
+  Normal 1, Hard 1.5, Extreme 2. The old Easy/Normal/Hard quota factors are superseded.
+- Each success advances the multiplier index before use (first next multiplier 1.3).
+  Next quota is `sig2((quota + 0.75 * (jar - quota)) * multiplier * difficulty)`.
+  The retained jar is read after all booth settlements. Rewards use the completed
+  floor before advancing the success count, and the highest reached surplus tier.
+- Crew scaling applies once: retain the crew-scaled quota through a night, then
+  rescale the pending next quota by `newCrewMultiplier / priorCrewMultiplier` at
+  the next departure. Constant-size crews follow the study recurrence without
+  compounding an extra crew factor. Day previews use that same pending baseline.
+- DEV night jumps reconstruct a nominal history with jar equal to quota at each
+  skipped success; ordinary progression always uses the actual retained jar.
+- Keep starting jar/Tokens, stakes and wallet cap unchanged. The fixed Bill and
+  Bill Box deposits are retired; final payment is the entire jar at Final Choice.
+  Final choice, payment presentation, Showdown scoring and related lore are M6
+  redesign work. No final-payment gameplay is added to M1.
+- Verification: seven new pure-rule tests first failed against the old rules;
+  the suite now passes 30/30. All twelve nominal study rows pass for Normal, Hard
+  and Extreme, plus extended multipliers, two-digit rounding, all six crew sizes,
+  every inclusive Token tier and floor-boundary rewards. Lint has zero errors or
+  warnings; formatting, types and hub/tower/dev builds pass.
+- DEV regression first reproduced the unwanted quota debit. The new actual-server
+  tests pass retained balance, no quota audit transaction, catch-up across four
+  nights, duplicate closing suppression, failure/cannon/replay, forced-pass top-up,
+  floor transitions, wallet cap and DEV night jumps. Crew preview tests exposed
+  and fixed one rounding edge: before the first success, recompute the starting
+  baseline for the present crew instead of rescaling an already rounded preview.
+- Final fresh DEV Play had zero script errors/warnings. The result showed jar
+  1,000 against quota 780 and +11 Tokens (wallet 16); clicking NEXT NIGHT reached
+  Day 2 with jar still 1,000 and quota 1,200. [Screenshot](screenshots/m1-quota-kept.png).
+  Updated server smoke also passed. Tests used one actual client and controlled
+  crew baselines; the revised multiplayer fixture is ready for the friend session.
+- M6 must reconcile late Extreme/Endless quota growth with the unchanged
+  9,999,999,999 jar cap, and revalidate old clear-rate targets with the simulator.
+  The study formula is not silently clamped. These are later balancing tasks;
+  no final payment, publishing or LIVE changes were made. Studio is back in Edit.
+- Docs 03/04/26, the station/roadmap deferrals, README and friend guide now match
+  the quota bar. Prior payment-based log entries are historical and superseded.
+  Stop again at the M1 friend gate; M2 has not started.
+
 ## M1 pre-playtest fixes — 2026-10-07
 
 Director requests three changes, then another stop at the M1 friend gate.

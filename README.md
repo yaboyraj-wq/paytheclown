@@ -32,7 +32,8 @@ and DEV friend invitation steps. M1 is waiting at the director's playtest gate.
 
 In Lot 13, press **READY**. Walk onto a booth pad and press **E** (or tap its
 PLAY prompt). Set the shared stake and press **GO**. The crew has five minutes
-to cover the quota. Bigsby takes payment at closing; falling short launches
+to reach the quota. Bigsby counts the jar at closing; passing keeps the whole jar
+and earns crew Tokens. Falling short launches
 everyone from the placeholder cannon. The host can press **PLAY AGAIN**.
 
 - **Stop-the-Reels:** watch the symbols on the machine, then stop each reel with
