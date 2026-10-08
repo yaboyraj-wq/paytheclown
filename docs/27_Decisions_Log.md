@@ -26,6 +26,11 @@ with Lune, lint/types/builds and actual DEV input/screenshots, then commit and p
   Do not replicate the master seed; replicate only each permitted setup preview.
   Block Toss retains its fixed physical starting pose and input-driven physics.
   Direction: owner; stream separation and seed visibility: agent.
+- Verification so far: cascade and payout regressions failed against the old rules,
+  then passed after the fix. Seed tests also went red-to-green. DEV server checks
+  exercised eight fresh run seeds, seed retention across nights, different night/run
+  setups, the two-second Pie preview, one-tile 1x opening and one extra pick banking
+  11 Tickets from a 10-Ticket stake. 23/23 tests, lint/types/format and builds pass.
 
 
 ## M0/M1 implementation plan — 2026-10-07

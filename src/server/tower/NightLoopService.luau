@@ -13,6 +13,7 @@ local Booths = require(script.Parent.BoothService)
 local World = require(script.Parent.WorldService)
 local Notify = require(script.Parent.Parent.Common.Notify)
 local NightLoopService = { history = {} :: { string } }
+local worldRandom = Random.new()
 local function now(): number
 	return workspace:GetServerTimeNow()
 end
@@ -30,6 +31,10 @@ local function moveCrew(night: boolean)
 	end
 end
 function NightLoopService.reset()
+	local previousSeed = Store.worldSeed
+	repeat
+		Store.worldSeed = worldRandom:NextInteger(1, R.WORLD_SEED_MAX)
+	until Store.worldSeed ~= previousSeed
 	Store.run += 1
 	Store.nightAttempt = 0
 	Store.night = 1

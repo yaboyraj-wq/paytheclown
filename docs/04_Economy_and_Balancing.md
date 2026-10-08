@@ -299,7 +299,10 @@ M1 uses the roadmap's short departure and placeholder cannon. These are prototyp
 | `CANNON_FORWARD` | 75 |
 | `PROTOTYPE_FLOOR` | 1 |
 | `PIE_DIFFICULTY_FLOOR` | 3 |
-| `SEED` | 1313 |
+| `WORLD_SEED_MAX` | 2147483646 (new server-random seed in 1..max for each run) |
+| `SEED_MODULUS` | 2147483647 (deterministic setup seed mixing) |
+| `SEED_MULTIPLIER` | 48271 |
+| `SEED_STREAMS` | REEL_STRIP=1, REEL_OFFSET=2, PIE_BOARD=3 |
 | `PIE_PREVIEW_SECONDS` | 2 |
 | `MAX_ROUND_SECONDS` | 45 |
 | `MINUTE` | 60 |

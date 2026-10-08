@@ -11,6 +11,7 @@ local Approval = require(Shared.Logic.Approval)
 local Reels = require(Shared.Logic.BoothLogic.Reels)
 local Blocks = require(Shared.Logic.BoothLogic.BlockToss)
 local Pie = require(Shared.Logic.BoothLogic.PieSweeper)
+local WorldSeeds = require(Shared.Logic.WorldSeeds)
 local Store = require(script.Parent.RunStore)
 local Jar = require(script.Parent.JarService)
 local World = require(script.Parent.WorldService)
@@ -54,6 +55,8 @@ export type Booth = {
 	physics: Physics.PhysicsRound?,
 	pending: Pending?,
 	approvalVersion: number,
+	playIndex: number,
+	setupRevision: number,
 	faces: { number },
 }
 local BoothService = {
@@ -81,7 +84,13 @@ local function permutation(length: number, random: Random): { number }
 	return order
 end
 local function preview(booth: Booth)
-	local random = Random.new(R.SEED + BoothService.counter + Store.night + booth.approvalVersion)
+	booth.setupRevision += 1
+	local random = Random.new(WorldSeeds.derive(Store.worldSeed, {
+		Store.night,
+		R.SEED_STREAMS.PIE_BOARD,
+		booth.playIndex,
+		booth.setupRevision,
+	}))
 	booth.board = Pie.create(
 		booth.pieCount,
 		booth.opening,
@@ -121,6 +130,7 @@ function BoothService.reset()
 	for _, booth in BoothService.booths do
 		clear(booth)
 		booth.closed = false
+		booth.playIndex = 0
 	end
 end
 function BoothService.resolve(booth: Booth, multiplier: number)
@@ -191,6 +201,8 @@ function BoothService.claim(player: Player, id: string): boolean
 		return false
 	end
 	BoothService.counter += 1
+	booth.playIndex += 1
+	booth.setupRevision = 0
 	booth.round = tostring(Store.run) .. ":" .. tostring(BoothService.counter)
 	booth.controller = player
 	booth.closed = false
@@ -202,14 +214,21 @@ function BoothService.claim(player: Player, id: string): boolean
 	booth.pieCount = B.PIE_SWEEPER.minPies
 	booth.opening = C.defaultOpening
 	state(booth, "CLAIMED")
-	local random = Random.new(R.SEED + Store.night + BoothService.counter)
+	local random = Random.new(
+		WorldSeeds.derive(Store.worldSeed, { Store.night, R.SEED_STREAMS.REEL_OFFSET, booth.playIndex })
+	)
 	booth.offsets = {}
 	booth.strips = {}
 	booth.symbols = {}
 	for index = 1, C.reelCount do
 		local strip = {}
 		for _, slot in
-			permutation(#B.STOP_REELS.strip, Random.new(R.SEED + Store.night * C.reelCount + index))
+			permutation(
+				#B.STOP_REELS.strip,
+				Random.new(
+					WorldSeeds.derive(Store.worldSeed, { Store.night, R.SEED_STREAMS.REEL_STRIP, index })
+				)
+			)
 		do
 			table.insert(strip, B.STOP_REELS.strip[slot])
 		end
@@ -363,7 +382,6 @@ function BoothService.input(player: Player, packet: { [string]: any }): boolean
 		end
 		booth.pieCount = packet.count
 		booth.opening = packet.opening
-		booth.approvalVersion += 1
 		preview(booth)
 		return true
 	end
@@ -610,6 +628,8 @@ function BoothService.init()
 			pointTosses = 0,
 			voids = 0,
 			approvalVersion = 0,
+			playIndex = 0,
+			setupRevision = 0,
 			faces = {},
 		}
 		if spec.id == "BLOCK_TOSS" then

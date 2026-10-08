@@ -13,6 +13,7 @@ export type State = {
 	closingPaid: boolean,
 	finalCall: boolean,
 	run: number,
+	worldSeed: number,
 	nightAttempt: number,
 	ready: { [number]: boolean },
 	skip: { [number]: boolean },
@@ -41,6 +42,7 @@ local state: State = {
 	closingPaid = false,
 	finalCall = false,
 	run = 0,
+	worldSeed = 0, -- Assigned by the server when a run begins; never sent to clients.
 	nightAttempt = 0,
 	ready = {},
 	skip = {},
