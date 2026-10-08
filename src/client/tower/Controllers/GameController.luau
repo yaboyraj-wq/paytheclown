@@ -715,6 +715,7 @@ local function render()
 				previewLabels[index],
 				text("REELS.PREVIEW_STRIP", {
 					reel = index,
+					slot = active.offsets[index] + 1,
 					offset = text("REELS.SYMBOL." .. active.strips[index][active.offsets[index] + 1]),
 					symbols = table.concat(strip, text("COMMON.SEPARATOR")),
 				})

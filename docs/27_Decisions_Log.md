@@ -11,6 +11,7 @@
 **Spec:** `18`, `23` M0/M1, `03`, `04`, `05_Booths/00`, `03`, `05`, `14`, `16`, `24`.
 
 ### Decisions and rulings
+- 2026-10-07 — [Original files] Owner authorized a separate reference study of the original game — User.
 - 2026-10-07 — [DEV confirmed] Owner confirms the renamed private experience `Pay the Clown [DEV]`, PlaceId `100356893013946`. MCP rechecked GameId `10769806964`. These are the only allowed DEV identifiers; all other places fail closed. IDs live only in `Config/Environment.luau`; other IDs remain 0. No LIVE changes authorized — Owner.
 - 2026-10-07 — [UI] Use plain component modules with shared theme and localization. This keeps the small prototype straightforward to inspect in Studio and avoids a second UI lifecycle while preserving reusable components — Agent.
 - 2026-10-07 — [Sync] Use Rojo for code, projects and tracked models. One combined DEV project allows early tests without teleports, while hub and tower manifests preserve the later split — Agent.
@@ -28,8 +29,8 @@ Additional implementation rulings:
 - [x] M0 foundation: pinned toolchain, Wally packages, all Config modules, project manifests, lint/type/format configuration, CI, human README, bootstrap, Net skeleton, logger/retry/cleanup utilities and a Lune smoke test. Local verification: 2/2 tests, no Selene warnings/errors, no type errors, format and all three builds pass.
 - [x] M0 Studio: Rojo sync, server/client playtest without errors, pushed foundation `1505537`; GitHub Actions run `37711632982` passed. Five-line summary sent; proceeding directly to M1 as authorized.
 - [x] M1 pure rules: Quota, Stakes, Approval, Payout, JarLedger, Reels, Block result rules, Pie board/cascade/multiplier, input validation and readiness. Initial missing-feature run: 14 failing new tests; implementation: 16/16 tests pass, lint/format/types and three builds pass.
-- [ ] M1 runtime: audited jar, run transitions, readiness, quotas/timers/grace/closing/cannon/restart, state snapshots/diffs, validated remotes, three booth adapters and gray-box models. DEV admin commands gated by exact environment plus Studio/owner identity. Verify server tests, commit.
-- [ ] M1 client: localized HUD, crew strip, rule cards, keypad, approval toasts, timestamped reel controls, aim/power/spin, Pie preview/flags/push/bank, camera and input controls. Verify through input tools and screenshots, commit.
+- [x] M1 runtime: audited jar, run transitions, readiness, quotas/timers/grace/closing/cannon/restart, state snapshots, validated remotes, three booth adapters and gray-box models. DEV admin commands gated by exact environment plus Studio/owner identity. Server tests pass; committed in `bca96b1`.
+- [x] M1 client: localized HUD, crew strip, rule cards, keypad, approval toasts, timestamped reel controls, aim/power/spin, Pie preview/flags/push/bank, camera and input controls. Verified through actual input tools and screenshots; committed in `bf5ac3b`, then clarified exact Reels starting slots after review.
 - [ ] M1 QA: several nights including pass/fail, all booths, replay/invalid/stale inputs, simultaneous spending, connection cleanup; multi-client if available, otherwise exact manual steps. Independent final review, fix material findings, push/check CI, report with screenshots and stop for director playtest.
 
 ### Review focus
@@ -55,6 +56,14 @@ Concurrent stake requests cannot overdraw; stale approval windows cannot spend a
 - **Balance risk for the director:** the specified 3-pie protected opening cascaded to 21 safe tiles and auto-banked 50x. This is the written formula/cascade behavior, not a client-authority bug. Retain the specified values for M1; discuss the opening/cascade economy at the playtest gate before broader booth rollout.
 - **Ruling:** Reels offsets must be shown before GO, not first shown during spinning; this follows AGENTS' commitment rule. Closing grace auto-banks an existing PUSH/BANK decision per the higher-priority booth framework; other unfinished plays lose. Lower-priority wording was corrected.
 - M1 uses English source strings in a Roblox LocalizationTable and original gray-box models. Final animation, audio, loss gags, item/bat hooks, tutorial, full device matrix, persistence and endings stay in their roadmap milestones. No claim of full release readiness under `24` §6 is made.
+- Independent whole-branch review (`e552bb1..bf5ac3b`): no Critical findings or deferred minors. One Important finding: repeated Reels symbols made the starting offset ambiguous. The preview now includes the exact one-based slot as well as its symbol. A test with two STAR occurrences failed before this change and passes after it; 18/18 unit tests pass.
+- Review rulings: retain the documented Pie economy for the director's decision (formula and tests are inexpensive to revise); defer items/bat/tutorial, saves/teleports, final art/audio, endings and production device/performance coverage to their explicit milestones. These are scope decisions, not claims those features are complete. Multiplayer must be verified before the M1 handoff.
+- Local Studio **Server and Clients** successfully retained both authorized DEV IDs. Two actual clients used READY and saw quota 400 and the same jar. Player2's GUI NO WAY veto blocked Player1's 500-Ticket request without debiting. Server integration checks with those actual players passed simultaneous 700/700 requests against a 1,000 jar, refreshed approval after a balance reduction, requester/stale/double-vote rejection, friends heads-up-only behavior, and wrong-controller rejection.
+- Actual host-client closure during a pending Pie decision banked the 10-Ticket value exactly once, transferred host to Player2, and preserved the locked two-person quota. Player2 then reached RUN_OVER and used the real PLAY AGAIN button to return to Lot 13 with 1,000 Tickets.
+- Final fresh single-client DEV run on the latest source: TextChatCommand `/ptc jar 1234` changed the actual server jar and HUD. Malformed packets and 1,000-packet bursts on each inbound channel left the jar unchanged; rejection logs were bounded to one per channel/window. Console contained zero warnings/errors. Updated Reels preview screenshot confirms distinct starting slots before GO. Temporary QA scripts disappeared when Play stopped.
+- Final spec audit found the fixed-window limiter was missing `16`'s token-bucket and sustained-spam kick requirements. Added pure `RateLimit`, smooth token refill, three consecutive windows strictly above 5x rate, bounded logging and a localized generic disconnect. Three new tests first failed for the missing module, then passed; suite now 21/21. Isolated bursts and idle gaps explicitly cannot trigger a kick. Full release anti-exploit/device coverage remains in later milestones; prototype evidence is not a green release checklist.
+- Friend access instructions use Roblox's current Limited → Playtesters audience. Its publishing page has conflicting older introductory Private wording; the dedicated audience/private sections govern the guide. The owner handles eligibility, verification, questionnaire, publication and access changes; the agent made none.
+- Token-bucket Studio verification: a 1,000-packet isolated burst on each inbound channel was dropped without disconnecting or changing the jar. Sustained 100/s Action spam produced the generic kick after the configured observation windows; the actual PlayerRemoving event verified unchanged currency. A fresh normal playtest and complete server smoke passed afterward. Separate reference-policy edits appeared during QA; they were preserved and excluded from implementation commits.
 
 ## M0 — connection preflight (2026-10-07)
 
@@ -80,8 +89,8 @@ Concurrent stake requests cannot overdraw; stale approval windows cannot spend a
 2. Pawn payouts (8/6/10 Tokens): tempting but rare? Track pawn rate in analytics.
 3. Should Quick Play crews share Tokens exactly like friend crews? (Current: yes.)
 4. Bill on Normal: keep 1,000,000 or tune after simulation (see `04` §11)?
-5. UI implementation: React (react-lua) or plain component modules? Decide in M0.
-6. Rojo vs. Studio Script Sync: Rojo recommended; confirm in M0.
+5. Resolved M0: plain UI component modules; see the UI ruling above.
+6. Resolved M0: Rojo; see the Sync ruling above.
 7. Does Big-Stake Approval default OFF in friends crews feel too chaotic or just right?
 8. Floor events: keep all three, or remove any that feel unfair?
 
@@ -90,7 +99,7 @@ Concurrent stake requests cannot overdraw; stale approval windows cannot spend a
 - 2026-10-07 — [Avatars] Players use their own R15 Roblox avatars — identity and cosmetic sales — `09` — User + design.
 - 2026-10-07 — [Monetization] Robux never buys Tickets, Tokens, items or outcomes; only Keep the Lights On is gameplay-adjacent and flags runs Assisted — fairness and retention — `15` — Design.
 - 2026-10-07 — [Places] Two places: public hub (Midway Gates) and private reserved Tower servers — matches the original's friends-only runs while giving Roblox a social hub — `08` — Design.
-- 2026-10-07 — [Original files] The agent never accesses the installed original game's files — Steam terms and copyright — `25`, `AGENTS.md` — Design.
+- 2026-10-07 — [Original files] Superseded by the owner-authorized separate reference study recorded above; building agents use only reference/ORIGINAL_STUDY.md — User.
 - 2026-10-07 — [Tooling] Build with an AI coding agent connected to Roblox Studio (built-in MCP) and Blender (Blender MCP) — user's choice — `SETUP_CONNECTIONS.md` — User.
 
 ## Milestone reports

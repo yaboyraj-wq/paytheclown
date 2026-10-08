@@ -5,13 +5,14 @@ local Shared = game.ReplicatedStorage.Shared
 local Net = require(Shared.Net.Net)
 local Definitions = require(Shared.Net.Definitions)
 local Input = require(Shared.Logic.InputRules)
+local RateLimit = require(Shared.Logic.RateLimit)
 local R = require(Shared.Config.Runtime)
-local C = require(Shared.Config.Prototype)
 local Booths = require(script.Parent.BoothService)
 local Night = require(script.Parent.NightLoopService)
 local Notify = require(script.Parent.Parent.Common.Notify)
 local Logger = require(Shared.Util.Logger)
-type Bucket = { start: number, count: number, seq: number, logged: boolean }
+local Locale = require(Shared.Util.Locale)
+type Bucket = { limiter: RateLimit.State, seq: number, logged: boolean, kickSent: boolean }
 local buckets: { [Player]: { [string]: Bucket } } = {}
 local schemas: { [string]: { string } } = {
 	claim = { "kind", "seq", "booth" },
@@ -31,22 +32,34 @@ local schemas: { [string]: { string } } = {
 	reveal = { "kind", "seq", "booth", "round", "tile" },
 }
 local NetworkService = {}
+local function checkAbuse(player: Player, channel: string, bucket: Bucket, now: number)
+	local previousWindow = bucket.limiter.windowStart
+	RateLimit.advance(bucket.limiter, now)
+	if previousWindow ~= bucket.limiter.windowStart then
+		bucket.logged = false
+	end
+	if bucket.limiter.kicked and not bucket.kickSent then
+		bucket.kickSent = true
+		Logger.reject(channel, "sustained extreme spam; disconnected " .. player.UserId)
+		player:Kick(Locale.text("SYSTEM.CONNECTION_RESET"))
+	end
+end
 local function valid(player: Player, channel: string, packet: any): boolean
 	local time = workspace:GetServerTimeNow()
 	buckets[player] = buckets[player] or {}
 	local bucket = buckets[player][channel]
 	if not bucket then
-		bucket = { start = time, count = 0, seq = 0, logged = false }
+		bucket = {
+			limiter = RateLimit.new(Definitions[channel].rate, time),
+			seq = 0,
+			logged = false,
+			kickSent = false,
+		}
 		buckets[player][channel] = bucket
 	end
-	if time - bucket.start >= C.packetWindow then
-		bucket.start = time
-		bucket.count = 0
-		bucket.logged = false
-	end
-	bucket.count += 1
+	checkAbuse(player, channel, bucket, time)
 	if
-		bucket.count > Definitions[channel].rate
+		not RateLimit.consume(bucket.limiter, time)
 		or not Input.packet(packet)
 		or type(packet.kind) ~= "string"
 	then
@@ -78,8 +91,8 @@ local function valid(player: Player, channel: string, packet: any): boolean
 	return true
 end
 local function reject(player: Player, channel: string)
-	local bucket = buckets[player][channel]
-	if not bucket.logged then
+	local bucket = buckets[player] and buckets[player][channel]
+	if bucket and not bucket.logged then
 		bucket.logged = true
 		Logger.reject(channel, "rejected packet from " .. player.UserId)
 	end
@@ -131,6 +144,12 @@ function NetworkService.start()
 		elapsed += delta
 		if elapsed >= R.STATE_INTERVAL then
 			elapsed = 0
+			local now = workspace:GetServerTimeNow()
+			for player, channels in buckets do
+				for channel, bucket in channels do
+					checkAbuse(player, channel, bucket, now)
+				end
+			end
 			Net.get("RunState"):FireAllClients(Night.snapshot())
 			Net.get("BoothState"):FireAllClients(Booths.snapshots())
 		end

@@ -1,6 +1,7 @@
 --!strict
 -- Keys become entries in the Roblox LocalizationTable. Runtime UI uses Locale.text.
 return {
+	["SYSTEM.CONNECTION_RESET"] = "Connection interrupted. Please rejoin.",
 	["GAME.TITLE"] = "Pay the Clown!",
 	["HUD.JAR"] = "JAR {amount}",
 	["HUD.QUOTA"] = "Quota {amount}",
@@ -94,7 +95,7 @@ return {
 	["REELS.SYMBOL.TICKET"] = "TICKET",
 	["REELS.STRIP"] = "REEL {reel}: {symbols}",
 	["REELS.PREVIEW"] = "TONIGHT'S REEL STRIPS",
-	["REELS.PREVIEW_STRIP"] = "REEL {reel} • STARTS ON {offset}\n{symbols}",
+	["REELS.PREVIEW_STRIP"] = "REEL {reel} • START SLOT {slot}: {offset}\n{symbols}",
 	["REELS.PAYOUTS"] = "3 Waddles: 10x • 3 Stars: 5x • 3 other: 3x • Pair: 1.2x",
 	["BLOCK.POINT"] = "POINT {point}  ·  TOSS {toss}/{max}",
 	["BLOCK.OPENING"] = "OPENING TOSS",

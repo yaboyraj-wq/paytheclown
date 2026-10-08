@@ -283,6 +283,8 @@ M1 uses the roadmap's short departure and placeholder cannon. These are prototyp
 | `MAX_PING_SECONDS` | 1 |
 | `MAX_PACKET_FIELDS` | 8 |
 | `MAX_PACKET_STRING` | 64 |
+| `SPAM_MULTIPLIER` | 5 (strictly exceeding this multiple of each remote's rate) |
+| `SPAM_SECONDS` | 3 consecutive one-second observation windows |
 | `RETRY_ATTEMPTS` | 4 |
 | `RETRY_INITIAL_SECONDS` | 0.5 |
 | `RETRY_FACTOR` | 2 |

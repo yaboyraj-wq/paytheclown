@@ -1,5 +1,17 @@
 --!strict
 return function(test: (string, () -> ()) -> ())
+	test("reel previews distinguish repeated symbols at different starting slots", function()
+		local L = require("../../src/shared/Util/Locale")
+		local first = L.text(
+			"REELS.PREVIEW_STRIP",
+			{ reel = 1, slot = 1, offset = "STAR", symbols = "STAR STAR CANDY" }
+		)
+		local second = L.text(
+			"REELS.PREVIEW_STRIP",
+			{ reel = 1, slot = 2, offset = "STAR", symbols = "STAR STAR CANDY" }
+		)
+		assert(first ~= second, "players must see which repeated symbol is the starting slot")
+	end)
 	test("packets reject nested data, long field names, oversized strings and excess fields", function()
 		local I = require("../../src/shared/Logic/InputRules")
 		assert(I.packet({ kind = "throw", seq = 1, aim = 0, power = 0.5, spin = 1 }))
