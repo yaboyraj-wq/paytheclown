@@ -25,6 +25,48 @@ The check script also finds Rokit tools in the standard installation folder.
 `hub.project.json` and `tower.project.json` build the separate future places.
 Shared money and outcomes always belong to the server.
 
+## Play the M1 prototype
+
+In Lot 13, press **READY**. Walk onto a booth pad and press **E** (or tap its
+PLAY prompt). Set the shared stake and press **GO**. The crew has five minutes
+to cover the quota. Bigsby takes payment at closing; falling short launches
+everyone from the placeholder cannon. The host can press **PLAY AGAIN**.
+
+- **Stop-the-Reels:** study the visible strips, then stop each reel with the
+  button, Space, or R2. Matching symbols pay according to the preview card.
+- **Block Toss:** aim with buttons, right-drag, or the left stick. Choose spin.
+  Hold and release TOSS, Space, or R2 to set power. The right card explains
+  the opening totals and Point rules.
+- **Pie Sweeper:** choose pie count/opening and memorize the preview. GO hides
+  the pies. PUSH, pick a covered tile, then BANK before a splat. Right-click
+  tiles or use FLAGS for notes. Decision timeout banks automatically.
+
+This is a gray-box fun test: no saves, shops, items, final art, audio or endings.
+The written Pie cascade formula can pay 50x immediately at low pie counts;
+that balance concern is recorded for the director's playtest.
+
+## DEV testing commands
+
+Type these in Roblox chat. They are intercepted by TextChatService rather than
+sent as player chat. They work only in the exact authorized DEV experience,
+and only in Studio or for the verified owner.
+
+| Command | Effect |
+| --- | --- |
+| `/ptc jar 1000` | Set the shared jar; recorded in the audit log |
+| `/ptc skip` | Depart from Day, or finish the current timed phase |
+| `/ptc night 4` | Return to Day before Night 4; preserve the jar |
+| `/ptc pass` | During a night, close it with a forced quota pass |
+| `/ptc fail` | During a night, close it with a forced quota failure |
+
+Night jumps accept 1–100. Jar values accept whole Tickets from 0–9,999,999,999.
+Forced pass adds any missing quota Tickets with a DEV audit entry. These commands
+are test aids; use ordinary controls for the three friend-group fun sessions.
+
+Studio server checks live in `tools/qa`. They are **not** shipped by Rojo. Run them
+as temporary Scripts in Play mode on DEV, not by requiring services in the MCP
+command context (that has a separate module cache).
+
 ## Project map
 
 - `src/shared/Config`: values and identifiers from the design
@@ -36,4 +78,3 @@ Shared money and outcomes always belong to the server.
 
 Never put keys or cookies in files. `.env` is ignored. Dependencies are restored
 from `wally.lock`; they are not copied into Git. No third-party game files are used.
-
