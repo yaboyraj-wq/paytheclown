@@ -321,6 +321,7 @@ This conditions the reference §5.10 reciprocal-survival formula on the free saf
 opening. Three pies: picks 1/2/3 pay 1x/1.14x/1.31x. Eight pies: 1x/1.5x/2.3x.
 The 50x cap and all-safe auto-bank stay; neither can trigger from the opening alone.
 
+
 ## 14. M1 gray-box measurements and presentation defaults
 
 These prototype-only starting values are mirrored exactly in `Config/Prototype.luau`. Distances are studs, angles radians, durations seconds, and UI measurements design pixels. They do not replace booth payout tables.
@@ -541,7 +542,25 @@ These prototype-only starting values are mirrored exactly in `Config/Prototype.l
     0.4,
     8
   ],
+  "reelCenterColor": "FFC93C",
   "reelCount": 3,
+  "reelOffset": [
+    0,
+    4.4,
+    1.6
+  ],
+  "reelRows": [
+    -1,
+    0,
+    1
+  ],
+  "reelSize": [
+    3.6,
+    5.4,
+    0.6
+  ],
+  "reelSpacing": 4.2,
+  "reelSymbolText": 30,
   "signOffset": [
     0,
     9,
@@ -604,7 +623,19 @@ These prototype-only starting values are mirrored exactly in `Config/Prototype.l
     "pieControlsY": 310,
     "previewAlpha": 0.15,
     "quarter": 0.25,
+    "reelCameraFocus": [
+      -4,
+      4.4,
+      0
+    ],
+    "reelCameraOffset": [
+      -4,
+      6,
+      21
+    ],
     "reelHeight": 94,
+    "reelPayoutHeight": 96,
+    "reelPlayPanelHeight": 220,
     "reelStripY": 132,
     "resultSeconds": 4,
     "row": 64,

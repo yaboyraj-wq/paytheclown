@@ -43,6 +43,7 @@ export type Booth = {
 	strips: { { string } },
 	offsets: { number },
 	symbols: { string },
+	positions: { number },
 	board: Pie.Board?,
 	previewEnd: number,
 	pieCount: number,
@@ -114,6 +115,7 @@ local function clear(booth: Booth)
 	booth.pending = nil
 	booth.stake = 0
 	booth.symbols = {}
+	booth.positions = {}
 	booth.multiplier = 0
 	booth.payout = 0
 	booth.board = nil
@@ -220,6 +222,7 @@ function BoothService.claim(player: Player, id: string): boolean
 	booth.offsets = {}
 	booth.strips = {}
 	booth.symbols = {}
+	booth.positions = {}
 	for index = 1, C.reelCount do
 		local strip = {}
 		for _, slot in
@@ -332,6 +335,8 @@ local function stopReel(booth: Booth, time: number)
 	if index > C.reelCount then
 		return
 	end
+	booth.positions[index] =
+		Reels.position(booth.offsets[index], R.PROTOTYPE_FLOOR, index, time - booth.startTime)
 	booth.symbols[index] = Reels.symbol(
 		booth.strips[index],
 		booth.offsets[index],
@@ -573,6 +578,7 @@ function BoothService.snapshots(): { any }
 			stake = b.stake,
 			startTime = b.startTime,
 			symbols = table.clone(b.symbols),
+			positions = table.clone(b.positions),
 			strips = b.strips,
 			offsets = b.offsets,
 			deadline = b.deadline,
@@ -620,6 +626,7 @@ function BoothService.init()
 			strips = {},
 			offsets = {},
 			symbols = {},
+			positions = {},
 			previewEnd = 0,
 			pieCount = B.PIE_SWEEPER.minPies,
 			opening = C.defaultOpening,

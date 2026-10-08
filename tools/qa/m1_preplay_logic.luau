@@ -2,7 +2,12 @@
 local Env = require(game.ReplicatedStorage.Shared.Config.Environment).DEV
 assert(game.PlaceId == Env.PlaceId and game.GameId == Env.GameId, "DEV only")
 local T = game.ServerScriptService.Tower
-local N, S, B, W, J = require(T.NightLoopService), require(T.RunStore), require(T.BoothService), require(T.WorldService), require(T.JarService)
+local N, S, B, W, J =
+	require(T.NightLoopService),
+	require(T.RunStore),
+	require(T.BoothService),
+	require(T.WorldService),
+	require(T.JarService)
 local R = require(game.ReplicatedStorage.Shared.Config.Runtime)
 local p = game.Players:GetPlayers()[1]
 local function enterNight()
@@ -52,7 +57,10 @@ task.wait(R.PIE_PREVIEW_SECONDS + 0.1)
 assert(B.stake(p, pie.id, pie.round, 10))
 task.wait(R.LOCK_SECONDS + 0.1)
 B.step(workspace:GetServerTimeNow())
-assert(pie.state == "PUSH_DECISION" and board.safeCount == 1 and pie.multiplier == 1, "opening is one safe tile at 1x")
+assert(
+	pie.state == "PUSH_DECISION" and board.safeCount == 1 and pie.multiplier == 1,
+	"opening is one safe tile at 1x"
+)
 for tile in pies do
 	assert(board.pies[tile], "GO must not reroll the preview")
 end

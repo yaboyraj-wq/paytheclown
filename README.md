@@ -35,18 +35,20 @@ PLAY prompt). Set the shared stake and press **GO**. The crew has five minutes
 to cover the quota. Bigsby takes payment at closing; falling short launches
 everyone from the placeholder cannon. The host can press **PLAY AGAIN**.
 
-- **Stop-the-Reels:** study the visible strips, then stop each reel with the
-  button, Space, or R2. Matching symbols pay according to the preview card.
+- **Stop-the-Reels:** watch the symbols on the machine, then stop each reel with
+  the button, Space, or R2. The gold center row decides the result; the side card
+  shows only payouts.
 - **Block Toss:** aim with buttons, right-drag, or the left stick. Choose spin.
   Hold and release TOSS, Space, or R2 to set power. The right card explains
   the opening totals and Point rules.
 - **Pie Sweeper:** choose pie count/opening and memorize the preview. GO hides
-  the pies. PUSH, pick a covered tile, then BANK before a splat. Right-click
-  tiles or use FLAGS for notes. Decision timeout banks automatically.
+  the pies. The safe opening reveals one tile at 1x. PUSH, pick one covered tile,
+  then BANK before a splat. Zero tiles never cascade. Right-click tiles or use
+  FLAGS for notes. Decision timeout banks automatically.
 
 This is a gray-box fun test: no saves, shops, items, final art, audio or endings.
-The written Pie cascade formula can pay 50x immediately at low pie counts;
-that balance concern is recorded for the director's playtest.
+Each run gets a fresh server-owned world seed; its booth setups are repeatable
+within that run. Pie payouts grow per deliberate safe pick after the opening.
 
 ## DEV testing commands
 

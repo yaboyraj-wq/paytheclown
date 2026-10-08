@@ -19,7 +19,7 @@ with Lune, lint/types/builds and actual DEV input/screenshots, then commit and p
   visible setup and existing opening/neighbor protection. This supersedes earlier
   cascade and factor rulings. Direction: owner; conditional formula detail: agent.
 - Reels show starting symbols directly on the machine before GO; the side panel
-  contains only payouts. All spinning visuals will share the server's deterministic
+  contains only payouts. All spinning visuals share the server's deterministic
   timeline. No new randomness after GO. Direction: owner.
 - Generate worldSeed once per run on the server, keep it through nights/admin night
   jumps, and derive separate streams for night strips, play offsets and Pie setups.
@@ -31,6 +31,20 @@ with Lune, lint/types/builds and actual DEV input/screenshots, then commit and p
   exercised eight fresh run seeds, seed retention across nights, different night/run
   setups, the two-second Pie preview, one-tile 1x opening and one extra pick banking
   11 Tickets from a 10-Ticket stake. 23/23 tests, lint/types/format and builds pass.
+- Final verification: 24/24 unit tests; formatting, lint, type analysis and all three
+  builds pass. Actual DEV input completed GO and three reel stops; frame-synchronized
+  client assertions verified both the starting windows and exact stopped symbols
+  against server state. Actual Pie input showed exactly one tile at 1x, then exactly
+  two at 1.14x, and banked successfully. The final fresh Play session contained zero
+  script errors or warnings. New screenshots: [world reels](screenshots/m1-world-reels.png),
+  [safe opening](screenshots/m1-pie-single-opening.png),
+  [second pick](screenshots/m1-pie-single-pick.png).
+- The gray-box reel model, generator, pure display rules and localized client view
+  are tracked together. The payout panel is compact during both setup and play;
+  long symbol names fit inside their world reel rows. No final art added.
+- Stop again at the M1 friend gate. These fixes were tested in one DEV client;
+  the earlier two-client evidence remains recorded below, and the director's new
+  friend session is still pending. Studio is back in Edit mode; no publication made.
 
 
 ## M0/M1 implementation plan — 2026-10-07
@@ -158,8 +172,9 @@ Server/Add Clients steps first, then the owner-controlled DEV publishing and
 tester access steps for friends on separate computers. Play three sessions and
 watch for laughter, jar arguments and requests for another night.
 
-**Known issues:** Low-pie openings can immediately auto-bank 50x under the current
-formula. Actual tests covered one and two players, not four concurrent clients.
+**Known issues (original report, updated after feedback):** The 50x opening was
+resolved by the single-pick fix above. Actual tests covered one and two players,
+not four concurrent clients.
 Tablet emulation and desktop were inspected; physical phone/controller/performance
 coverage is pending. This milestone has no saves, shops, items, final art/audio or
 endings. No published DEV friend session has yet been performed.

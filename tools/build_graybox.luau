@@ -81,6 +81,44 @@ for _, data in C.booths do
 	else
 		part(booth, "Counter", C.counterSize, center, C.colorPart)
 	end
+	if data.id == "STOP_REELS" then
+		local reels = Instance.new("Folder")
+		reels.Name = "Reels"
+		reels.Parent = booth
+		for index = 1, C.reelCount do
+			local reel = part(
+				reels,
+				"Reel" .. index,
+				C.reelSize,
+				center + v(C.reelOffset) + Vector3.new((index - (C.reelCount + 1) / 2) * C.reelSpacing, 0, 0),
+				C.colorDark
+			)
+			reel.CFrame *= CFrame.Angles(0, math.pi, 0)
+			local display = Instance.new("SurfaceGui")
+			display.Name = "Window"
+			display.Face = r.Enum.NormalId.Front
+			display.SizingMode = r.Enum.SurfaceGuiSizingMode.PixelsPerStud
+			display.PixelsPerStud = C.labelPixels
+			display.Parent = reel
+			for row, offset in C.reelRows do
+				local label = Instance.new("TextLabel")
+				label.Name = "Row" .. row
+				label.Size = r.UDim2.fromScale(1, 1 / #C.reelRows)
+				label.Position = r.UDim2.fromScale(0, (row - 1) / #C.reelRows)
+				label.BackgroundColor3 = Color3.fromHex(if offset == 0 then C.reelCenterColor else C.colorPad)
+				label.BorderSizePixel = 0
+				label.TextColor3 = Color3.fromHex(C.colorDark)
+				label.TextSize = C.reelSymbolText
+				label.TextScaled = true
+				local limit = Instance.new("UITextSizeConstraint")
+				limit.MinTextSize = C.ui.small
+				limit.MaxTextSize = C.reelSymbolText
+				limit.Parent = label
+				label.Text = ""
+				label.Parent = display
+			end
+		end
+	end
 end
 part(model, "Cannon", C.cannonSize, v(C.cannonPosition), C.colorDark)
 fs.writeFile("assets/Graybox.rbxm", r.serializeModel({ model }))

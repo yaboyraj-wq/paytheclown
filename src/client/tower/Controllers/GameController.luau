@@ -12,7 +12,7 @@ local E = require(Shared.Config.Economy)
 local B = require(Shared.Config.Booths)
 local Theme = require(Shared.Config.UITheme)
 local L = require(Shared.Util.Locale)
-local Reels = require(Shared.Logic.BoothLogic.Reels)
+local ReelView = require(script.Parent.ReelView)
 local Stakes = require(Shared.Logic.Stakes)
 local Net = require(Shared.Net.Net)
 local Kit = require(script.Parent.Parent.Parent.Common.UI.Kit)
@@ -43,8 +43,6 @@ local root: Frame
 local scale: UIScale
 local refs: { [string]: any } = {}
 local tiles: { TextButton } = {}
-local reelLabels: { TextLabel } = {}
-local stripLabels: { TextLabel } = {}
 local previewLabels: { TextLabel } = {}
 local function text(key: string, args: { [string]: any }?): string
 	return L.text(key, args)
@@ -235,7 +233,6 @@ local function build()
 	refs.reelPreview.AnchorPoint = Vector2.new(1, 0)
 	local previewTitle = label(refs.reelPreview, "Title", U.sectionTitleY, U.titleRow, U.title)
 	refs.previewTitle = previewTitle
-	previewTitle.Text = text("REELS.PREVIEW")
 	for index = 1, C.reelCount do
 		previewLabels[index] = label(
 			refs.reelPreview,
@@ -304,22 +301,7 @@ local function build()
 	reelFrame.Size = UDim2.fromScale(1, 1)
 	reelFrame.Parent = play
 	refs.reels = reelFrame
-	for index = 1, C.reelCount do
-		local reel = Kit.frame(
-			reelFrame,
-			"Reel" .. index,
-			UDim2.new(U.third, -U.gap, 0, U.reelHeight),
-			UDim2.new((index - 1) * U.third, U.gap * U.half, 0, 0)
-		)
-		reel.BackgroundColor3 = Kit.color("CreamShade")
-		local symbol = Kit.label(reel, "Symbol", UDim2.fromScale(1, 1), UDim2.fromScale(0, 0), U.body)
-		symbol.TextXAlignment = Enum.TextXAlignment.Center
-		symbol.TextColor3 = Kit.color("Ink")
-		reelLabels[index] = symbol
-		stripLabels[index] =
-			label(reelFrame, "Strip" .. index, U.reelStripY + (index - 1) * U.ruleRow, U.ruleRow, U.stripText)
-	end
-	refs.stop = button(reelFrame, "Stop", "ACTION.STOP", 0, U.gameButtonY, 1, function()
+	refs.stop = button(reelFrame, "Stop", "ACTION.STOP", 0, 0, 1, function()
 		primary(true)
 	end)
 	local blockFrame = Instance.new("Frame")
@@ -509,11 +491,13 @@ local function camera(id: string)
 	for _, spec in C.booths do
 		if spec.id == id then
 			local center = Vector3.new(unpack(spec.position))
+			local offset = if id == "STOP_REELS" then U.reelCameraOffset else U.cameraOffset
+			local focus = if id == "STOP_REELS" then U.reelCameraFocus else U.cameraFocus
 			cam.CameraType = Enum.CameraType.Scriptable
 			local tween = TweenService:Create(cam, TweenInfo.new(U.cameraSeconds), {
 				CFrame = CFrame.lookAt(
-					center + Vector3.new(unpack(U.cameraOffset)),
-					center + Vector3.new(unpack(U.cameraFocus))
+					center + Vector3.new(unpack(offset)),
+					center + Vector3.new(unpack(focus))
 				),
 			})
 			cameraTween = tween
@@ -527,6 +511,7 @@ local function render()
 		return
 	end
 	local time = workspace:GetServerTimeNow()
+	ReelView.render(booths, time)
 	local cam = workspace.CurrentCamera
 	local viewport = if cam then cam.ViewportSize else Vector2.new(U.baseWidth, U.baseHeight)
 	local factor = math.clamp(math.min(viewport.X / U.baseWidth, viewport.Y / U.baseHeight), U.scaleMin, 1)
@@ -617,7 +602,8 @@ local function render()
 		end
 	end
 	refs.panel.Visible = active ~= nil
-	refs.reelPreview.Visible = active ~= nil and active.id ~= "PIE_SWEEPER" and active.state == "STAKING"
+	refs.reelPreview.Visible = active ~= nil
+		and (active.id == "STOP_REELS" or (active.id == "BLOCK_TOSS" and active.state == "STAKING"))
 	refs.pie.Visible = active ~= nil and active.id == "PIE_SWEEPER"
 	refs.result.Visible = run.phase == "RESULT_SUCCESS"
 		or run.phase == "RESULT_FAIL"
@@ -653,6 +639,27 @@ local function render()
 		chargeStart = nil
 	end
 	local staging = active.state == "STAKING"
+	local worldReels = active.id == "STOP_REELS"
+	refs.panel.Size = UDim2.fromOffset(
+		U.panelWidth,
+		if worldReels and not staging then U.reelPlayPanelHeight else U.panelHeight
+	)
+	refs.reelPreview.Size =
+		UDim2.fromOffset(U.panelWidth, if worldReels then U.reelPayoutHeight else U.panelHeight)
+	refs.previewTitle.Visible = not worldReels
+	for _, previewLabel in previewLabels do
+		previewLabel.Visible = not worldReels
+	end
+	refs.previewPayouts.Position = UDim2.fromOffset(
+		U.padding,
+		if worldReels then U.padding else U.sectionRuleY + C.reelCount * U.reelHeight
+	)
+	refs.previewPayouts.Size = UDim2.new(
+		1,
+		-U.padding - U.padding,
+		0,
+		if worldReels then U.reelPayoutHeight - U.padding - U.padding else U.reelHeight
+	)
 	refs.keypad.Visible = staging
 	refs.play.Visible = not staging
 	Kit.text(refs.title, text("BOOTH." .. active.id))
@@ -661,7 +668,7 @@ local function render()
 		refs.status,
 		text("BOOTH_STATE." .. active.state, { multiplier = active.multiplier, payout = active.payout })
 	)
-	camera(if not staging and active.state ~= "COOLDOWN" then active.id else "")
+	camera(if (not staging or worldReels) and active.state ~= "COOLDOWN" then active.id else "")
 	if staging then
 		Kit.text(refs.stake, text("STAKE.VALUE", { stake = stake, jar = run.jar }))
 		Kit.text(
@@ -691,36 +698,7 @@ local function render()
 	refs.blocks.Visible = active.id == "BLOCK_TOSS"
 	refs.piePlay.Visible = active.id == "PIE_SWEEPER"
 	if active.id == "STOP_REELS" then
-		Kit.text(refs.previewTitle, text("REELS.PREVIEW"))
 		Kit.text(refs.previewPayouts, text("REELS.PAYOUTS"))
-		for index = 1, C.reelCount do
-			local symbol = active.symbols[index]
-				or Reels.symbol(
-					active.strips[index],
-					active.offsets[index],
-					R.PROTOTYPE_FLOOR,
-					index,
-					math.max(0, time - active.startTime)
-				)
-			Kit.text(reelLabels[index], text("REELS.SYMBOL." .. symbol))
-			local strip = {}
-			for _, name in active.strips[index] do
-				table.insert(strip, text("REELS.SYMBOL." .. name))
-			end
-			Kit.text(
-				stripLabels[index],
-				text("REELS.STRIP", { reel = index, symbols = table.concat(strip, text("COMMON.SEPARATOR")) })
-			)
-			Kit.text(
-				previewLabels[index],
-				text("REELS.PREVIEW_STRIP", {
-					reel = index,
-					slot = active.offsets[index] + 1,
-					offset = text("REELS.SYMBOL." .. active.strips[index][active.offsets[index] + 1]),
-					symbols = table.concat(strip, text("COMMON.SEPARATOR")),
-				})
-			)
-		end
 		Kit.text(refs.stop, text("ACTION.STOP", { reel = math.min(C.reelCount, #active.symbols + 1) }))
 		Kit.enabled(refs.stop, active.state == "PLAYING")
 	elseif active.id == "BLOCK_TOSS" then

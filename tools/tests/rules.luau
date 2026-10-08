@@ -1,16 +1,19 @@
 --!strict
 return function(test: (string, () -> ()) -> ())
-	test("reel previews distinguish repeated symbols at different starting slots", function()
-		local L = require("../../src/shared/Util/Locale")
-		local first = L.text(
-			"REELS.PREVIEW_STRIP",
-			{ reel = 1, slot = 1, offset = "STAR", symbols = "STAR STAR CANDY" }
-		)
-		local second = L.text(
-			"REELS.PREVIEW_STRIP",
-			{ reel = 1, slot = 2, offset = "STAR", symbols = "STAR STAR CANDY" }
-		)
-		assert(first ~= second, "players must see which repeated symbol is the starting slot")
+	test("world reel windows wrap and show neighbors around the actual center symbol", function()
+		local Reels = require("../../src/shared/Logic/BoothLogic/Reels")
+		local strip = { "STAR", "BALLOON", "STAR", "TICKET" }
+		local first, second = Reels.window(strip, 0), Reels.window(strip, 2)
+		assert(table.concat(first, ",") == "TICKET,STAR,BALLOON", "wrapped previous and next symbol")
+		assert(table.concat(second, ",") == "BALLOON,STAR,TICKET", "repeated center keeps its neighbors")
+		assert(table.concat(Reels.window(strip, 4), ",") == table.concat(first, ","), "whole strip wraps")
+	end)
+	test("world reel preview stays at its start until GO and freezes at the server stop", function()
+		local Reels = require("../../src/shared/Logic/BoothLogic/Reels")
+		assert(Reels.displayPosition(2, 1, 1, "STAKING", 0, 900, nil) == 2, "preview ignores clock")
+		assert(Reels.displayPosition(2, 1, 1, "LOCKED", 901, 900, nil) == 2, "lock keeps start")
+		assert(Reels.displayPosition(2, 1, 1, "PLAYING", 900, 901, nil) == 8, "six symbols per second")
+		assert(Reels.displayPosition(2, 1, 1, "PLAYING", 900, 902, 9) == 9, "server stop wins")
 	end)
 	test("packets reject nested data, long field names, oversized strings and excess fields", function()
 		local I = require("../../src/shared/Logic/InputRules")

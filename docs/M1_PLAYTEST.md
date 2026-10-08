@@ -85,9 +85,10 @@ playtester flow used above. Requirements were checked on 2026-10-07.
 6. Play another night or use the host's **PLAY AGAIN** after a loss. Run three
    sessions in total; use ordinary controls rather than admin shortcuts.
 
-Watch especially for Pie's low-pie opening reaching 50x without another decision.
-Does it erase the tension? Also note whether Reels' timing and Block Toss's aim
-feel learnable, and whether the shared stake warning arrives in time.
+Pie now reveals exactly one tile per pick: the opening pays 1x and additional
+safe picks grow the payout. Watch whether PUSH/BANK creates tension. Note whether
+the physical Reels' timing and Block Toss's aim feel learnable, whether new runs
+feel varied, and whether the shared stake warning arrives in time.
 
 ## DEV shortcuts for you
 
@@ -110,7 +111,7 @@ must be whole numbers between 0 and 9,999,999,999. All money changes enter the a
 
 - Best moment, most confusing moment, and whether they wanted another night.
 - Crew size, device, booth/night, and steps for any bug. A screenshot or clip helps.
-- Whether Pie's opening payout needs changing before M2.
+- Whether Pie's new one-pick pacing and Reels' visual timing are fun before M2.
 
 Record voice or screens only with the players' permission. Final art, audio,
 shops, items, saving and endings belong to later milestones; judge the loop now.

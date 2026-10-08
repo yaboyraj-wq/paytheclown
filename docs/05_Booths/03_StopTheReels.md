@@ -15,14 +15,14 @@
 A tall, chunky carnival machine with three big vertical reels behind glass, a giant red STOP button on the counter, and light bulbs around the frame. Symbols are carnival icons: Balloon, Popcorn, Star, Cotton Candy, Ticket, and **Sir Waddles** (the rare one). It must not look like a casino slot machine: no lever, no coin slot, no "777," no cherries or bars.
 
 ## 3. How it plays
-1. Set stake, GO. All three reels start spinning at the floor's speed.
+1. Watch the three reels on the machine: the gold center row shows the starting symbols before GO, with adjacent symbols above and below. Set stake, GO. All three reels start cycling at the floor's speed.
 2. Press the action button to stop **reel 1**, then **reel 2**, then **reel 3**. Each reel stops on the symbol under the center line at the moment you press (with a 0.12 s settle animation that never changes the result).
 3. Result by the three symbols on the center line.
 4. If you don't press within 6 s, reels stop automatically one by one (at their current position).
 
 ## 4. Visible setup randomness
-- Each reel has a fixed **strip** of 12 symbols per night (seeded shuffle). The strip is printed on a small card beside the machine, so skilled players can learn it.
-- Reel starting offsets are chosen per play before GO. The keypad preview shows every strip and its starting symbol before the stake locks.
+- Each reel has a fixed **strip** of 12 symbols per night, derived from the run's fresh world seed. Players learn its timing and order by watching the machine. There is no full-strip text card.
+- Reel starting offsets are derived per play before GO. The physical reel windows display those starting symbols before the stake locks; the side panel contains only the payout line. Spectators see the same setup and stopped positions.
 - Nothing random after commitment or after a press (AGENTS §2.2).
 
 ## 5. Payout table
@@ -76,4 +76,4 @@ None.
 
 ## 13. Build notes
 - Reels can be SurfaceGui or 3D parts with a texture strip scrolled by UV offset; SurfaceGui with ImageLabels is simplest and crisp.
-- Keep the strip card UI generated from the same strip data (single source).
+- World-space windows use the same strip data and timeline as server evaluation. Exact server stop positions freeze the visible center and its neighboring symbols. M1 uses original gray-box Parts with SurfaceGui labels; final symbols and animation come at M5.
