@@ -31,7 +31,7 @@ Additional implementation rulings:
 - [x] M1 pure rules: Quota, Stakes, Approval, Payout, JarLedger, Reels, Block result rules, Pie board/cascade/multiplier, input validation and readiness. Initial missing-feature run: 14 failing new tests; implementation: 16/16 tests pass, lint/format/types and three builds pass.
 - [x] M1 runtime: audited jar, run transitions, readiness, quotas/timers/grace/closing/cannon/restart, state snapshots, validated remotes, three booth adapters and gray-box models. DEV admin commands gated by exact environment plus Studio/owner identity. Server tests pass; committed in `bca96b1`.
 - [x] M1 client: localized HUD, crew strip, rule cards, keypad, approval toasts, timestamped reel controls, aim/power/spin, Pie preview/flags/push/bank, camera and input controls. Verified through actual input tools and screenshots; committed in `bf5ac3b`, then clarified exact Reels starting slots after review.
-- [ ] M1 QA: several nights including pass/fail, all booths, replay/invalid/stale inputs, simultaneous spending, connection cleanup; multi-client if available, otherwise exact manual steps. Independent final review, fix material findings, push/check CI, report with screenshots and stop for director playtest.
+- [x] M1 QA: repeated pass/fail/replay, all booths, invalid/stale inputs, simultaneous spending, disconnect settlement and host transfer; two real local clients. Independent review finding fixed. Final local checks: 21/21 unit tests, lint/types/format and all builds pass. QA scripts, screenshots and friend guide saved. GitHub CI result is linked in the milestone handoff after push.
 
 ### Review focus
 Concurrent stake requests cannot overdraw; stale approval windows cannot spend a changed jar without revalidation; closing must settle once; disconnects cannot duplicate payouts; hidden state cannot leak beyond the documented preview.
@@ -103,7 +103,47 @@ Concurrent stake requests cannot overdraw; stale approval windows cannot spend a
 - 2026-10-07 — [Tooling] Build with an AI coding agent connected to Roblox Studio (built-in MCP) and Blender (Blender MCP) — user's choice — `SETUP_CONNECTIONS.md` — User.
 
 ## Milestone reports
-(Agent adds a report at the end of each milestone: what was built, screenshots, test results, known issues, next steps.)
+
+### Milestone 1 report — 2026-10-07 (Pacific)
+
+**Built:**
+- M0 toolchain, configuration, CI and guarded DEV setup.
+- One original gray floor and Lot 13 with three playable skill booths.
+- Shared audited jar, crew quota, five-minute nights, Final Call, closing, cannon and replay.
+- HUD, keypad, warnings/approvals, mouse/keyboard controls, touch/controller input paths and DEV commands.
+
+**Screenshots:** [Reels preview](screenshots/m1-reels-preview.png),
+[two-player stake warning](screenshots/m1-multiplayer-approval.png),
+[Pie BANK](screenshots/m1-pie-bank.png), [Final Call](screenshots/m1-final-call.png).
+
+**Tests:** 21/21 Lune tests; Selene zero errors/warnings; StyLua and Luau type checks;
+hub/tower/dev builds. Actual Studio input tests covered all three booths and natural
+Final Call. Server tests covered repeated nights, quota/payout deduplication,
+admin night revisits, invalid remotes and extreme spam. Two real local clients
+verified the same jar, vetoes, concurrent spending, host departure and replay.
+Block Toss's repeated reference throw matched 20/20 times. Latest normal server/client
+run had zero script warnings/errors. One independent review finding fixed.
+
+**Please playtest:** Follow [M1_PLAYTEST.md](M1_PLAYTEST.md). Use the local
+Server/Add Clients steps first, then the owner-controlled DEV publishing and
+tester access steps for friends on separate computers. Play three sessions and
+watch for laughter, jar arguments and requests for another night.
+
+**Known issues:** Low-pie openings can immediately auto-bank 50x under the current
+formula. Actual tests covered one and two players, not four concurrent clients.
+Tablet emulation and desktop were inspected; physical phone/controller/performance
+coverage is pending. This milestone has no saves, shops, items, final art/audio or
+endings. No published DEV friend session has yet been performed.
+
+**Decisions I made:** See the rulings and verification entries above: plain UI
+modules, Rojo, exact DEV guards, public Pie setup, explicit Reels starting slots,
+and preserving the specified Pie numbers for the fun gate.
+
+**Next:** Stop here. Address the director's M1 feedback, then start M2 only after
+the three-session gate and explicit go-ahead.
+
+**Questions for you:** After playing, what was the best moment, what was most
+confusing, and did the crew ask for another night?
 
 ## Tuning changes
 (Agent adds every economy/booth tuning change here with before/after values and the reason.)

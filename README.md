@@ -27,6 +27,9 @@ Shared money and outcomes always belong to the server.
 
 ## Play the M1 prototype
 
+Start with the [M1 playtest guide](docs/M1_PLAYTEST.md) for exact local multi-client
+and DEV friend invitation steps. M1 is waiting at the director's playtest gate.
+
 In Lot 13, press **READY**. Walk onto a booth pad and press **E** (or tap its
 PLAY prompt). Set the shared stake and press **GO**. The crew has five minutes
 to cover the quota. Bigsby takes payment at closing; falling short launches
