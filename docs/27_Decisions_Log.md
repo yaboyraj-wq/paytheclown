@@ -26,8 +26,8 @@ Additional implementation rulings:
 
 ### Build and verification steps
 - [x] M0 foundation: pinned toolchain, Wally packages, all Config modules, project manifests, lint/type/format configuration, CI, human README, bootstrap, Net skeleton, logger/retry/cleanup utilities and a Lune smoke test. Local verification: 2/2 tests, no Selene warnings/errors, no type errors, format and all three builds pass.
-- [ ] M0 Studio: start Rojo, connect to the confirmed DEV place, run server/client bootstrap without project errors; push and check CI. Send five-line summary and proceed.
-- [ ] M1 pure rules: Quota, Stakes, Approval, Payout, JarLedger, Reels, Block result rules, Pie board/cascade/multiplier, input validation. Write failing behavior tests, implement, run Lune suite, lint/format/typecheck, commit.
+- [x] M0 Studio: Rojo sync, server/client playtest without errors, pushed foundation `1505537`; GitHub Actions run `37711632982` passed. Five-line summary sent; proceeding directly to M1 as authorized.
+- [x] M1 pure rules: Quota, Stakes, Approval, Payout, JarLedger, Reels, Block result rules, Pie board/cascade/multiplier, input validation and readiness. Initial missing-feature run: 14 failing new tests; implementation: 16/16 tests pass, lint/format/types and three builds pass.
 - [ ] M1 runtime: audited jar, run transitions, readiness, quotas/timers/grace/closing/cannon/restart, state snapshots/diffs, validated remotes, three booth adapters and gray-box models. DEV admin commands gated by exact environment plus Studio/owner identity. Verify server tests, commit.
 - [ ] M1 client: localized HUD, crew strip, rule cards, keypad, approval toasts, timestamped reel controls, aim/power/spin, Pie preview/flags/push/bank, camera and input controls. Verify through input tools and screenshots, commit.
 - [ ] M1 QA: several nights including pass/fail, all booths, replay/invalid/stale inputs, simultaneous spending, connection cleanup; multi-client if available, otherwise exact manual steps. Independent final review, fix material findings, push/check CI, report with screenshots and stop for director playtest.
@@ -40,6 +40,11 @@ Concurrent stake requests cannot overdraw; stale approval windows cannot spend a
 - MCP Play test: server and client bootstrap both print ready. Output contains zero errors/warnings. Relative Luau module paths work in Studio and Lune. Hub/tower manifests build successfully; their shared bootstrap is exercised together in DEV as requested for early milestones.
 - Local check script passes: 2/2 tests, Selene 0 errors/0 warnings, formatting, type analysis and three place builds. Luau-lsp's standalone CLI reports its own file-watcher capability notice; it is unrelated to project code.
 - Work stays in the current checkout on a codex branch, preserving the existing source-only repository and the active Rojo connection. No third-party game files accessed, no publication performed.
+
+### M1 rule implementation — 2026-10-07
+- Pie multiplier removes the guaranteed opening tile from both populations: product starts at i=1, with k equal to total revealed safe tiles. A lone opening is 1x; cascade extras count. The original approximate examples were not exact; the formula and explicit first-tile exclusion govern. Cost if revised: formula plus its tests.
+- Input packets accept only bounded scalar fields (64-character strings, at most 8 fields); each action also checks its exact schema, controller, phase and distance. No client payout/result fields are accepted.
+- Economy mutations are synchronous and deduplicated per run; each accepted mutation records actual before/after balances, including capped credits. Audit display retains 2,048 entries; operation IDs remain remembered for the run.
 
 ## M0 — connection preflight (2026-10-07)
 

@@ -28,11 +28,12 @@ A 5×5 grid of silver cloches (dinner covers) on a long banquet table. Some hide
 ## 5. Payout (multiplier after k safe tiles revealed)
 ```
 safeTiles = 25 − pies
-mult(k) = 0.92 × Π_{i=0}^{k−1} (25 − i) / (safeTiles − i)
+mult(k) = 0.92 × Π_{i=1}^{k−1} (25 − i) / (safeTiles − i), for k > 1
+mult(1) = 1.0
 ```
 Rounded to 2 decimals. The first reveal (always safe) is excluded from the product (it starts the board at 1.0x). Cascades multiply in all revealed tiles. Hard ceiling: 50x auto-banks; revealing all safe tiles auto-banks.
 
-Example, 3 pies: after 5 extra safe tiles ≈ 1.9x; after 10 ≈ 4.4x.
+Example, 3 pies: one extra safe tile pays 1.05x. `k` counts all safe tiles including the guaranteed opening; the product excludes that opening.
 
 ## 6. Push ladder
 Per reveal as above.

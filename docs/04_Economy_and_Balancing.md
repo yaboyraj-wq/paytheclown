@@ -282,6 +282,7 @@ M1 uses the roadmap's short departure and placeholder cannon. These are prototyp
 | `INPUT_FUTURE_TOLERANCE` | 0.05 |
 | `MAX_PING_SECONDS` | 1 |
 | `MAX_PACKET_FIELDS` | 8 |
+| `MAX_PACKET_STRING` | 64 |
 | `RETRY_ATTEMPTS` | 4 |
 | `RETRY_INITIAL_SECONDS` | 0.5 |
 | `RETRY_FACTOR` | 2 |
